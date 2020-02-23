@@ -44,9 +44,9 @@ public class Connect4TextConsole {
             game.FigureOutWhoseTurn();
             System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
             int column = Integer.valueOf(scanner.nextLine());
-            int row = game.gameBoard.SetPiece(column, game.gameBoard.GetWhoseTurn());
+            int row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
             PrintGameBoard(game);
-            if(game.CheckForWin(row, column)) break;
+            if(game.CheckForWin(row, column - 1)) break;
         }
 
         System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " is the winner!");

@@ -32,8 +32,8 @@ public class GameBoard implements IGameBoard {
 
     public int SetPiece(int column, Player player){
        for (int i = rows - 1 ; i >= 0; i--){
-           if(gameBoard[i][column] == "| "){
-               gameBoard[i][column]  = "|" + player.GetToken();
+           if(gameBoard[i][column].equals("| ") || gameBoard[i][column].equals("| |")){
+               gameBoard[i][column] = column != 6 ? "|" + player.GetToken() : "|" + player.GetToken() + "|" ;
                return i;
            }
        }

@@ -33,9 +33,8 @@ public class Connect4 implements IConnect4 {
 
        if(row <= 2){ //checks vertical
            for (int i = row; i < gameBoard.GetRows(); i++){
-               if(gameBoard.GetPiece(i, column).equals("|" + gameBoard.GetWhoseTurn().GetToken())){
-                   pieceCount++;
-               }
+               if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken())) pieceCount++;
+               else break;
            }
 
            if(pieceCount == 4) return true;
@@ -44,9 +43,8 @@ public class Connect4 implements IConnect4 {
 
        if(column >= 3){ //check horizontal left
            for (int i = column; i >= 0; i--){
-               if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken())){
-                   pieceCount++;
-               }
+               if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken())) pieceCount++;
+               else break;
            }
 
            if(pieceCount == 4) return true;
@@ -55,9 +53,8 @@ public class Connect4 implements IConnect4 {
 
         if(column < 3){ //check horizontal right
             for (int i = column; i < gameBoard.GetColumns(); i++){
-                if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken())){
-                    pieceCount++;
-                }
+                if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken())) pieceCount++;
+                else break;
             }
 
             if(pieceCount == 4) return true;
