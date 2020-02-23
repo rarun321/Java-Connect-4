@@ -3,6 +3,8 @@ package core;
 public interface IGameBoard {
     int GetRows();
     int GetColumns();
-    String GetValue(int row, int column);
-    void SetValue(int row, int column, Player player);
+    int SetPiece(int column, Player player);
+    String GetPiece(int row, int column);
+    Player GetWhoseTurn();
+    void SetWhoseTurn(Player player);
 }

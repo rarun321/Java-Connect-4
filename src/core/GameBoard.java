@@ -1,10 +1,10 @@
 package core;
 
 public class GameBoard implements IGameBoard {
-    public final int rows = 6;
+    private final int rows = 6;
     private final int columns = 7;
     private String[][] gameBoard = new String[rows][columns];
-
+    private Player player;
 
     public GameBoard(){
         for (int i = 0; i < rows; i++){ //intializes empty gameboard
@@ -26,11 +26,26 @@ public class GameBoard implements IGameBoard {
         return columns;
     }
 
-    public String GetValue(int row, int column){
+    public String GetPiece(int row, int column){
         return gameBoard[row][column];
     }
 
-    public void SetValue(int row, int column, Player player){
-        gameBoard[row][column] = player.GetToken();
+    public int SetPiece(int column, Player player){
+       for (int i = rows - 1 ; i >= 0; i--){
+           if(gameBoard[i][column] == "| "){
+               gameBoard[i][column]  = "|" + player.GetToken();
+               return i;
+           }
+       }
+
+       return 0;
+    }
+
+    public Player GetWhoseTurn() {
+        return player;
+    }
+
+    public void SetWhoseTurn(Player player) {
+        this.player = player;
     }
 }

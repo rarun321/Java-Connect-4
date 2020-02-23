@@ -4,10 +4,7 @@ public class Player implements IPlayer {
     private String playerName;
     private String playerToken;
 
-    public Player(String name, String token){
-        playerName = name;
-        playerToken = token;
-    }
+    public Player(){ }
 
     public String GetName() {
         return playerName;
@@ -15,5 +12,13 @@ public class Player implements IPlayer {
 
     public String GetToken() {
         return playerToken;
+    }
+
+    public void SetToken(String token) {
+        playerToken = token;
+    }
+
+    public void SetName(String name) {
+        playerName = name;
     }
 }
