@@ -31,9 +31,12 @@ public class Connect4 implements IConnect4 {
     public boolean CheckForWin(int row, int column){
         int pieceCount = 0;
 
+
        if(row <= 2){ //checks vertical
            for (int i = row; i < gameBoard.GetRows(); i++){
-               if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken())) pieceCount++;
+               if(gameBoard.GetPiece(i, column).equals("|" + gameBoard.GetWhoseTurn().GetToken())){
+                   pieceCount++;
+               }
                else break;
            }
 
