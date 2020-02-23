@@ -1,9 +1,10 @@
 package core;
 
-public class GameBoard {
-    private final int rows = 6;
+public class GameBoard implements IGameBoard {
+    public final int rows = 6;
     private final int columns = 7;
     private String[][] gameBoard = new String[rows][columns];
+
 
     public GameBoard(){
         for (int i = 0; i < rows; i++){ //intializes empty gameboard
@@ -17,12 +18,19 @@ public class GameBoard {
         }
     }
 
-    public void GameBoardPrint(){
-        for (int i = 0; i < rows; i++){
-            for (int e = 0; e < columns; e++){
-               System.out.print(gameBoard[i][e]);
-            }
-            System.out.println();
-        }
+    public int GetRows(){
+        return rows;
+    }
+
+    public int GetColumns(){
+        return columns;
+    }
+
+    public String GetValue(int row, int column){
+        return gameBoard[row][column];
+    }
+
+    public void SetValue(int row, int column, Player player){
+        gameBoard[row][column] = player.GetToken();
     }
 }
