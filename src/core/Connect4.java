@@ -5,6 +5,8 @@ public class Connect4 implements IConnect4 {
     public Player player1;
     public Player player2;
 
+    private final int winCheck = 4;
+
     public Connect4(){
         gameBoard = new GameBoard();
         player1 = new Player();
@@ -41,7 +43,7 @@ public class Connect4 implements IConnect4 {
                else break;
            }
 
-           if(pieceCount == 4) return true;
+           if(pieceCount == winCheck) return true;
            else pieceCount = 0;
        }
 
@@ -51,7 +53,7 @@ public class Connect4 implements IConnect4 {
                else break;
            }
 
-           if(pieceCount == 4) return true;
+           if(pieceCount == winCheck) return true;
            else pieceCount = 0;
        }
 
@@ -66,7 +68,7 @@ public class Connect4 implements IConnect4 {
         }
 
         if(column != 6){ //checks diagonal right side top and bottom
-            for (int i = 0; i < 4; i++){
+            for (int i = 0; i < winCheck; i++){
                 if(gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
                     try{
                         gameBoard.GetPiece(tempRow + 1 , tempCol - 1);
@@ -83,12 +85,12 @@ public class Connect4 implements IConnect4 {
                 else break;
             }
 
-            if(pieceCount == 4) return true;
+            if(pieceCount == winCheck) return true;
             else pieceCount = 0;
         }
 
         if(column != 0){ //checks diagonal left side top and bottom
-            for (int i = 0; i < 4; i++){
+            for (int i = 0; i < winCheck; i++){
                 if(gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
                     try{
                         gameBoard.GetPiece(tempRow + 1 , tempCol + 1);
@@ -105,7 +107,7 @@ public class Connect4 implements IConnect4 {
                 else break;
             }
 
-            if(pieceCount == 4) return true;
+            if(pieceCount == winCheck) return true;
         }
 
       return false;
