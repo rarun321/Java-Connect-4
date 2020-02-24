@@ -31,14 +31,13 @@ public class Connect4 implements IConnect4 {
     }
 
     public boolean CheckForWin(int row, int column){
-      if(CheckVertical(row,column) || CheckHorizontal(row, column)){
-          return true;
-      }
+      if(CheckVertical(row,column) || CheckHorizontal(row, column) || CheckDiagonalRight(row, column) || CheckDiagonalLeft(row, column)) return true;
       return false;
     }
 
     private boolean CheckVertical(int row, int column){
         int pieceCount = 0;
+
            for (int i = row; i < gameBoard.GetRows(); i++){
                if(gameBoard.GetPiece(i, column).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(i , column).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
                    pieceCount++;
@@ -53,27 +52,104 @@ public class Connect4 implements IConnect4 {
     private boolean CheckHorizontal(int row, int column){
         int pieceCount = 0;
 
-        for (int i = column; i <= gameBoard.GetColumns() - 1; i++){
-            if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                pieceCount++;
+        for (int i = column; i >= 0; i--){
+            try{
+                if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                    pieceCount++;
+                }
+                else{
+                    break;
+                }
             }
-        }
-
-        for (int i = 0; i < column; i++){
-            if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                pieceCount++;
-            }
-            else if(!gameBoard.GetPiece(row, i).equals("| ")){
+            catch(Exception e){
                 break;
             }
         }
 
         if(pieceCount == 4) return true;
+
+        int temp = pieceCount;
+        for (int i = 0; i <  winCheck - temp + 1; i++){
+            try{
+                if(gameBoard.GetPiece(row, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                    pieceCount++;
+                }
+                else{
+                    break;
+                }
+            }
+            catch (Exception e){
+                break;
+            }
+        }
+
+        if(pieceCount - 1 == 4) return true;
         return false;
     }
 
-    private boolean CheckDiagonal(){
-        return true;
+    private boolean CheckDiagonalRight(int row, int column){
+        int pieceCount = 0;
+
+        for(int i = 0; i < gameBoard.GetRows() - row; i++){
+            try{
+                if(gameBoard.GetPiece(row + i, column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row + i , column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                    pieceCount++;
+                }
+            }
+            catch (Exception e){
+                break;
+            }
+        }
+
+        if(pieceCount == 4) return true;
+
+        int temp = pieceCount;
+        for(int i = 0; i < winCheck - temp + 1 ; i++){
+            try{
+                if(gameBoard.GetPiece(row - i, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row - i , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                    pieceCount++;
+                }
+            }
+            catch (Exception e){
+                break;
+            }
+        }
+
+        if(pieceCount - 1 == 4) return true;
+        return false;
+    }
+
+
+    private boolean CheckDiagonalLeft(int row, int column){
+        int pieceCount = 0;
+
+        for(int i = 0; i < gameBoard.GetRows() - row; i++){
+            try{
+                if(gameBoard.GetPiece(row + i, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row + i , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                    pieceCount++;
+                }
+            }
+            catch (Exception e){
+                break;
+            }
+        }
+
+        if(pieceCount == 4) return true;
+
+        int temp = pieceCount;
+        for(int i = 0; i < winCheck - temp + 1 ; i++ ){
+            try{
+                if(gameBoard.GetPiece(row - i, column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row - i , column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                    pieceCount++;
+                }
+            }
+            catch (Exception e){
+                break;
+            }
+        }
+
+        if(pieceCount - 1 == 4) return true;
+        return false;
     }
 
     public boolean CheckForDraw(){
