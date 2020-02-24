@@ -47,12 +47,15 @@ public class Connect4TextConsole {
     public static void RunConsoleGame(Connect4 game, Scanner scanner){
         while (true){
             game.FigureOutWhoseTurn();
+
             System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
-            int column = Integer.valueOf(scanner.nextLine());
-            while (CheckIfColumnIsValid(column, game) == false){
+            int column = scanner.nextInt();
+
+            while (!CheckIfColumnIsValid(column, game)){
                 System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
-                column = Integer.valueOf(scanner.nextLine());
+                column = scanner.nextInt();
             }
+
             int row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
             PrintGameBoard(game);
             if(game.CheckForWin(row, column - 1)) {

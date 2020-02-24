@@ -7,13 +7,13 @@ public class Connect4 implements IConnect4 {
 
     private final int winCheck = 4;
 
-    public Connect4(){
+    public Connect4(){ //initializes games
         gameBoard = new GameBoard();
         player1 = new Player();
         player2 = new Player();
     }
 
-    public void FigureOutWhoseTurn(){
+    public void FigureOutWhoseTurn(){ //figures out which players turn it is
         if(gameBoard.GetWhoseTurn() == null){
             gameBoard.SetWhoseTurn(player1);
             return;
