@@ -39,16 +39,30 @@ public class Connect4TextConsole {
         RunConsoleGame(game, scanner);
     }
 
+    public static boolean CheckIfColumnIsValid(int column, Connect4 game){
+        if((column > 7 || column < 1) || !(game.gameBoard.GetPiece(0,column - 1).equals("| ") || game.gameBoard.GetPiece(0,column - 1).equals("| |"))) return false;
+        return true;
+    }
+
     public static void RunConsoleGame(Connect4 game, Scanner scanner){
         while (true){
             game.FigureOutWhoseTurn();
             System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
             int column = Integer.valueOf(scanner.nextLine());
+            while (CheckIfColumnIsValid(column, game) == false){
+                System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
+                column = Integer.valueOf(scanner.nextLine());
+            }
             int row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
             PrintGameBoard(game);
-            if(game.CheckForWin(row, column - 1)) break;
+            if(game.CheckForWin(row, column - 1)) {
+                System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " is the winner!");
+                break;
+            }
+            else if(game.CheckForDraw()){
+                System.out.println("It's a draw!");
+                break;
+            }
         }
-
-        System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " is the winner!");
     }
 }
