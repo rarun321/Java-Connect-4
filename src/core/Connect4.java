@@ -47,72 +47,19 @@ public class Connect4 implements IConnect4 {
            else pieceCount = 0;
        }
 
-       if(column >= 3){ //check horizontal left
-           for (int i = column; i >= 0; i--){
-               if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
-               else break;
-           }
+        int front = gameBoard.GetColumns() - column - 1;
+        int behind = column;
 
-           if(pieceCount == 4) return true;
-           else pieceCount = 0;
-       }
-
-        if(column <= 3){ //check horizontal right
-            for (int i = column; i < gameBoard.GetColumns(); i++){
-                if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
-                else break;
-            }
-
-            if(pieceCount == 4) return true;
-            else pieceCount = 0;
-        }
-
-        if(column != 6 && (row != 0 && column != 0)){ //checks diagonal right side top and bottom
-            for (int i = 0; i < winCheck; i++){
-                if(gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    try{
-                        gameBoard.GetPiece(tempRow + 1 , tempCol - 1);
-                        tempRow += 1;
-                        tempCol -= 1;
-                        pieceCount++;
-                    }
-                    catch (Exception e){
-                        tempRow -= pieceCount + 1;
-                        tempCol += pieceCount + 1;
-                        pieceCount++;
-                    }
-                }
-                else break;
-            }
-
-            if(pieceCount == winCheck) return true;
-            else{
-                pieceCount = 0;
-                tempCol = column;
-                tempRow = row;
+        for (int i = column; i < front; i++){
+            if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                pieceCount++;
             }
         }
 
-        if(column != 0 && (row != 5 && column != 6)){ //checks diagonal left side top and bottom
-            for (int i = 0; i < winCheck; i++){
-                if(gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(tempRow , tempCol).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    try{
-                        gameBoard.GetPiece(tempRow + 1 , tempCol + 1);
-                        tempRow += 1;
-                        tempCol += 1;
-                        pieceCount++;
-                    }
-                    catch (Exception e){
-                        tempRow -= pieceCount + 1;
-                        tempCol -= pieceCount + 1;
-                        pieceCount++;
-                    }
-                }
-                else break;
+        for (int i = 0; i < behind; i++){
+            if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                pieceCount++;
             }
-
-            if(pieceCount == winCheck) return true;
-
         }
 
       return false;
