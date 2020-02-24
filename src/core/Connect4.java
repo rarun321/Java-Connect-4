@@ -31,7 +31,7 @@ public class Connect4 implements IConnect4 {
     }
 
     public boolean CheckForWin(int row, int column){
-      if(CheckVertical(row,column) && CheckHorizontal(row, column)){
+      if(CheckVertical(row,column) || CheckHorizontal(row, column)){
           return true;
       }
       return false;
@@ -50,21 +50,21 @@ public class Connect4 implements IConnect4 {
            else return false;
     }
 
-
     private boolean CheckHorizontal(int row, int column){
         int pieceCount = 0;
-        int front = gameBoard.GetColumns() - column - 1;
-        int behind = column;
 
-        for (int i = column; i <= front; i++){
+        for (int i = column; i <= gameBoard.GetColumns() - 1; i++){
             if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
                 pieceCount++;
             }
         }
 
-        for (int i = 0; i < behind; i++){
+        for (int i = 0; i < column; i++){
             if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
                 pieceCount++;
+            }
+            else if(!gameBoard.GetPiece(row, i).equals("| ")){
+                break;
             }
         }
 
