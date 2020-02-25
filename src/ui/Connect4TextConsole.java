@@ -4,7 +4,10 @@ import core.Connect4;
 
 import java.util.Scanner;
 
+/**<p>Text UI for the connect 4 game</p>* */
+
 public class Connect4TextConsole {
+
     public static void main(String [] args)
     {
         Connect4 game = new Connect4();
@@ -12,6 +15,9 @@ public class Connect4TextConsole {
         CreatePlayersAndRunGame(scanner, game);
     }
 
+    /**<p>Text UI for the connect 4 game</p>*
+     * @param game Connect 4 game object
+     * */
     public static void PrintGameBoard(Connect4 game){
         for (int i = 0; i < game.gameBoard.GetRows(); i++){
             for (int e = 0; e < game.gameBoard.GetColumns(); e++){
@@ -21,6 +27,9 @@ public class Connect4TextConsole {
         }
     }
 
+    /**<p>Text UI for the connect 4 game</p>*
+     * @param game Connect 4 game object
+     * */
     public static void CreatePlayersAndRunGame(Scanner scanner, Connect4 game){
         System.out.println("Player One Name:");
         String playerOneName = scanner.nextLine();
@@ -39,11 +48,10 @@ public class Connect4TextConsole {
         RunConsoleGame(game, scanner);
     }
 
-    public static boolean CheckIfColumnIsValid(int column, Connect4 game){
-        if((column > 7 || column < 1) || !(game.gameBoard.GetPiece(0,column - 1).equals("| ") || game.gameBoard.GetPiece(0,column - 1).equals("| |"))) return false;
-        return true;
-    }
-
+    /**<p>Checks if the column the user entered is valid</p>*
+     * @param game connect 4 game object
+     * @param scanner scanner for user input
+     * */
     public static void RunConsoleGame(Connect4 game, Scanner scanner){
         while (true){
             game.FigureOutWhoseTurn();
@@ -51,7 +59,7 @@ public class Connect4TextConsole {
             System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
             int column = scanner.nextInt();
 
-            while (!CheckIfColumnIsValid(column, game)){
+            while (!game.gameBoard.CheckIfColumnIsValid(column, game)){
                 System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
                 column = scanner.nextInt();
             }

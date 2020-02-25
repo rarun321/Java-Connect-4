@@ -1,5 +1,6 @@
 package core;
 
+/**<p>Connect4 is used to create a new connect4 game</p>*/
 public class Connect4 implements IConnect4 {
     public GameBoard gameBoard;
     public Player player1;
@@ -7,13 +8,15 @@ public class Connect4 implements IConnect4 {
 
     private final int winCheck = 4;
 
-    public Connect4(){ //initializes games
+    /**<p>Initializes new game</p>*/
+    public Connect4(){
         gameBoard = new GameBoard();
         player1 = new Player();
         player2 = new Player();
     }
 
-    public void FigureOutWhoseTurn(){ //figures out which players turn it is
+    /**<p>Figures out whose turn it is based on the previous players turn.</p>*/
+    public void FigureOutWhoseTurn(){
         if(gameBoard.GetWhoseTurn() == null){
             gameBoard.SetWhoseTurn(player1);
             return;
@@ -30,15 +33,22 @@ public class Connect4 implements IConnect4 {
         }
     }
 
+    /**<p>Checks to see if the player has won the game</p>
+     * @param row row of the piece that was the just placed in the game board
+     * @param column column of the piece that was the just placed in the game board
+     * @return true or false
+     * */
     public boolean CheckForWin(int row, int column){
-      if(CheckVertical(row,column) || CheckHorizontal(row, column) || CheckDiagonalRight(row, column) || CheckDiagonalLeft(row, column)) return true;
-      return false;
+        if(CheckVertical(row,column) || CheckHorizontal(row, column) || CheckDiagonalRight(row, column) || CheckDiagonalLeft(row, column)) return true;
+        return false;
     }
-
+    /**<p>Checks to see if the game has ended in a draw</p>
+     * @return true or false
+     * */
     public boolean CheckForDraw(){
         for (int i = 0; i < gameBoard.GetRows(); i++){
             for(int e = 0; e < gameBoard.GetColumns(); e++){
-                if(!(gameBoard.GetPiece(i, e).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(i , e).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|"))){
+                if(!(gameBoard.GetPiece(i, e).equals("| ") || gameBoard.GetPiece(i , e).equals("| |"))){
                     return false;
                 }
             }
@@ -49,15 +59,15 @@ public class Connect4 implements IConnect4 {
     private boolean CheckVertical(int row, int column){
         int pieceCount = 0;
 
-           for (int i = row; i < gameBoard.GetRows(); i++){
-               if(gameBoard.GetPiece(i, column).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(i , column).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                   pieceCount++;
-               }
-               else break;
-           }
+        for (int i = row; i < gameBoard.GetRows(); i++){
+            if(gameBoard.GetPiece(i, column).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(i , column).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
+                pieceCount++;
+            }
+            else break;
+        }
 
-           if(pieceCount == 4) return true;
-           else return false;
+        if(pieceCount == 4) return true;
+        else return false;
     }
 
     private boolean CheckHorizontal(int row, int column){
