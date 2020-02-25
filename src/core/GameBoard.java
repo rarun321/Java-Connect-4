@@ -28,16 +28,12 @@ public class GameBoard implements IGameBoard {
     /**<p>Gets the number of rows in a connect 4 board</p>
      * @return rows in board
      * */
-    public int GetRows(){
-        return rows;
-    }
+    public int GetRows(){ return rows; }
 
     /**<p>Gets the number of columns in a connect 4 board</p>
      * @return columns in board
      * */
-    public int GetColumns(){
-        return columns;
-    }
+    public int GetColumns(){ return columns; }
 
     /**<p>Returns the value at position specified by the user on the board</p>
      * @param row any row on the game board
