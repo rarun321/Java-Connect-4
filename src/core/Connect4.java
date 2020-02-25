@@ -1,6 +1,11 @@
 package core;
 
-/**<p>Connect4 is used to create a new connect4 game</p>*/
+/**<p>Connect4 is used to create a new connect4 game</p>
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-02-23
+ * */
+
 public class Connect4 implements IConnect4 {
     public GameBoard gameBoard;
     public Player player1;
@@ -47,11 +52,7 @@ public class Connect4 implements IConnect4 {
      * */
     public boolean CheckForDraw(){
         for (int i = 0; i < gameBoard.GetRows(); i++){
-            for(int e = 0; e < gameBoard.GetColumns(); e++){
-                if(!(gameBoard.GetPiece(i, e).equals("| ") || gameBoard.GetPiece(i , e).equals("| |"))){
-                    return false;
-                }
-            }
+            for(int e = 0; e < gameBoard.GetColumns(); e++) if(!(gameBoard.GetPiece(i, e).equals("| ") || gameBoard.GetPiece(i , e).equals("| |"))) return false;
         }
         return true;
     }
@@ -60,13 +61,11 @@ public class Connect4 implements IConnect4 {
         int pieceCount = 0;
 
         for (int i = row; i < gameBoard.GetRows(); i++){
-            if(gameBoard.GetPiece(i, column).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(i , column).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                pieceCount++;
-            }
+            if(gameBoard.GetPiece(i, column).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(i , column).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
             else break;
         }
 
-        if(pieceCount == 4) return true;
+        if(pieceCount == winCheck) return true;
         else return false;
     }
 
@@ -75,16 +74,10 @@ public class Connect4 implements IConnect4 {
 
         for (int i = column; i >= 0; i--){
             try{
-                if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    pieceCount++;
-                }
-                else{
-                    break;
-                }
+                if(gameBoard.GetPiece(row, i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
+                else break;
             }
-            catch(Exception e){
-                break;
-            }
+            catch(Exception e){ break;}
         }
 
         if(pieceCount == winCheck) return true;
@@ -92,16 +85,10 @@ public class Connect4 implements IConnect4 {
         int temp = pieceCount;
         for (int i = 0; i <  winCheck - temp + 1; i++){
             try{
-                if(gameBoard.GetPiece(row, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    pieceCount++;
-                }
-                else{
-                    break;
-                }
+                if(gameBoard.GetPiece(row, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
+                else break;
             }
-            catch (Exception e){
-                break;
-            }
+            catch (Exception e){ break;}
         }
 
         if(pieceCount - 1 == winCheck) return true;
@@ -113,14 +100,10 @@ public class Connect4 implements IConnect4 {
 
         for(int i = 0; i < gameBoard.GetRows() - row; i++){
             try{
-                if(gameBoard.GetPiece(row + i, column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row + i , column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    pieceCount++;
-                }
+                if(gameBoard.GetPiece(row + i, column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row + i , column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
                 else break;
             }
-            catch (Exception e){
-                break;
-            }
+            catch (Exception e){ break;}
         }
 
         if(pieceCount == 4) return true;
@@ -128,14 +111,10 @@ public class Connect4 implements IConnect4 {
         int temp = pieceCount;
         for(int i = 0; i < winCheck - temp + 1 ; i++){
             try{
-                if(gameBoard.GetPiece(row - i, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row - i , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    pieceCount++;
-                }
+                if(gameBoard.GetPiece(row - i, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row - i , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
                 else break;
             }
-            catch (Exception e){
-                break;
-            }
+            catch (Exception e){ break;}
         }
 
         if(pieceCount - 1 == winCheck) return true;
@@ -148,14 +127,10 @@ public class Connect4 implements IConnect4 {
 
         for(int i = 0; i < gameBoard.GetRows() - row; i++){
             try{
-                if(gameBoard.GetPiece(row + i, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row + i , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    pieceCount++;
-                }
+                if(gameBoard.GetPiece(row + i, column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row + i , column + i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|"))pieceCount++;
                 else break;
             }
-            catch (Exception e){
-                break;
-            }
+            catch (Exception e){ break;}
         }
 
         if(pieceCount == winCheck) return true;
@@ -163,14 +138,10 @@ public class Connect4 implements IConnect4 {
         int temp = pieceCount;
         for(int i = 0; i < winCheck - temp + 1 ; i++ ){
             try{
-                if(gameBoard.GetPiece(row - i, column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row - i , column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")){
-                    pieceCount++;
-                }
+                if(gameBoard.GetPiece(row - i, column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken()) || gameBoard.GetPiece(row - i , column - i).equals("|" + gameBoard.GetWhoseTurn().GetToken() + "|")) pieceCount++;
                 else break;
             }
-            catch (Exception e){
-                break;
-            }
+            catch (Exception e){ break;}
         }
 
         if(pieceCount - 1 == winCheck) return true;

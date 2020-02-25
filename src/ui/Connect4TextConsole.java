@@ -1,10 +1,13 @@
 package ui;
 
 import core.Connect4;
-
 import java.util.Scanner;
 
-/**<p>Text UI for the connect 4 game</p>* */
+/**<p>Text UI for the connect 4 game</p>*
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-02-23
+ * */
 
 public class Connect4TextConsole {
 
@@ -20,9 +23,7 @@ public class Connect4TextConsole {
      * */
     public static void PrintGameBoard(Connect4 game){
         for (int i = 0; i < game.gameBoard.GetRows(); i++){
-            for (int e = 0; e < game.gameBoard.GetColumns(); e++){
-                System.out.print(game.gameBoard.GetPiece(i,e));
-            }
+            for (int e = 0; e < game.gameBoard.GetColumns(); e++) System.out.print(game.gameBoard.GetPiece(i,e));
             System.out.println();
         }
     }
@@ -57,9 +58,17 @@ public class Connect4TextConsole {
             game.FigureOutWhoseTurn();
 
             System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
-            int column = scanner.nextInt();
+            int column;
+            String value = scanner.nextLine();
 
-            while (!game.gameBoard.CheckIfColumnIsValid(column, game)){
+            while(!value.matches("[1-7]+")){
+                System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
+                value = scanner.nextLine();
+            }
+
+            column = Integer.valueOf(value);
+
+            while (!game.gameBoard.CheckIfColumnIsFull(column, game)){
                 System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
                 column = scanner.nextInt();
             }

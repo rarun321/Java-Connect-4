@@ -1,6 +1,11 @@
 package core;
 
-/**<p>Player is used to keep track of information about the user</p>*/
+/**<p>Player is used to keep track of information about the user</p>
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-02-23
+ * */
+
 public class Player implements IPlayer {
     private String playerName;
     private String playerToken;

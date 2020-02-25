@@ -1,6 +1,11 @@
 package core;
 
-/**<p>GameBoard is used to add player pieces into the board and keep track of where the pieces are</p>*/
+/**<p>GameBoard is used to add player pieces into the board and keep track of where the pieces are</p>
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-02-23
+ * */
+
 public class GameBoard implements IGameBoard {
     private final int rows = 6;
     private final int columns = 7;
@@ -67,11 +72,11 @@ public class GameBoard implements IGameBoard {
      * */
     public void SetWhoseTurn(Player player) { this.player = player;}
 
-    /**<p>Checks if the column the user entered is valid</p>*
+    /**<p>Checks if the column the user entered is full</p>*
      * @param column column that the user entered
      * @param game connect 4 game object
      * */
-    public boolean CheckIfColumnIsValid(int column, Connect4 game){
+    public boolean CheckIfColumnIsFull(int column, Connect4 game){
         if((column > 7 || column < 1) || !(game.gameBoard.GetPiece(0,column - 1).equals("| ") || game.gameBoard.GetPiece(0,column - 1).equals("| |"))) return false;
         return true;
     }

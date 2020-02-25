@@ -1,5 +1,11 @@
 package core;
 
+/**<p>Interface used to outline game board class</p>
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-02-23
+ * */
+
 public interface IGameBoard {
     /**<p>Gets the number of rows in a connect 4 board</p>
      * @return rows in board
@@ -39,5 +45,5 @@ public interface IGameBoard {
      * @param column column that the user entered
      * @param game connect 4 game object
      * */
-    boolean CheckIfColumnIsValid(int column, Connect4 game);
+    boolean CheckIfColumnIsFull(int column, Connect4 game);
 }
