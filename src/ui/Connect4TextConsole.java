@@ -2,6 +2,7 @@ package ui;
 
 import core.Connect4;
 import core.Connect4ComputerPlayer;
+import core.Player;
 
 import java.util.Scanner;
 
@@ -21,7 +22,6 @@ public class Connect4TextConsole {
         String answer = scanner.nextLine();
         if(answer.equals("P")) CreatePlayersAndRunGame(scanner, game);
         else CreateComputerAndRunGame(scanner, game);
-
     }
 
     /**<p>Text UI for the connect 4 game</p>*
@@ -40,17 +40,16 @@ public class Connect4TextConsole {
     private static void CreatePlayersAndRunGame(Scanner scanner, Connect4 game){
         System.out.println("Player One Name:");
         String playerOneName = scanner.nextLine();
-        game.player1.SetName(playerOneName);
         System.out.println("Player One Token:");
         String playerOneToken = scanner.nextLine();
-        game.player1.SetToken(playerOneToken);
+        game.player1 = new Player(playerOneName, playerOneToken);
+
 
         System.out.println("Player Two Name:");
         String playerTwoName = scanner.nextLine();
-        game.player2.SetName(playerTwoName);
         System.out.println("Player Two Token:");
         String playerTwoToken = scanner.nextLine();
-        game.player2.SetToken(playerTwoToken);
+        game.player2 = new Player(playerTwoName, playerTwoToken);
 
         RunConsoleGame(game, scanner);
     }
@@ -58,14 +57,11 @@ public class Connect4TextConsole {
     private static void CreateComputerAndRunGame(Scanner scanner, Connect4 game){
         System.out.println("Player One Name:");
         String playerOneName = scanner.nextLine();
-        game.player1.SetName(playerOneName);
         System.out.println("Player One Token:");
         String playerOneToken = scanner.nextLine();
-        game.player1.SetToken(playerOneToken);
+        game.player1 = new Player(playerOneName, playerOneToken);
 
-        Connect4ComputerPlayer computerPlayer = new Connect4ComputerPlayer();
-        game.player2.SetName(computerPlayer.GetName());
-        game.player2.SetToken(computerPlayer.GetToken());
+        game.player2 = new Connect4ComputerPlayer();
 
         RunConsoleGame(game, scanner);
     }
@@ -75,27 +71,36 @@ public class Connect4TextConsole {
      * @param scanner scanner for user input
      * */
     private static void RunConsoleGame(Connect4 game, Scanner scanner){
+        int column = 0;
+        String value = "";
+
         while (true){
             game.FigureOutWhoseTurn();
 
-            System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
-            int column;
-            String value = scanner.nextLine();
-
-            while(!value.matches("[1-7]+")){
-                System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
+            if(game.gameBoard.GetWhoseTurn().GetName() != "Bot"){
+                System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
                 value = scanner.nextLine();
+
+                while(!value.matches("[1-7]+")){
+                    System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
+                    value = scanner.nextLine();
+                }
+
+                column = Integer.valueOf(value);
+
+                while (!game.gameBoard.CheckIfColumnIsFull(column, game)){
+                    System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
+                    column = scanner.nextInt();
+                }
             }
-
-            column = Integer.valueOf(value);
-
-            while (!game.gameBoard.CheckIfColumnIsFull(column, game)){
-                System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
-                column = scanner.nextInt();
+            else{
+                column = ((Connect4ComputerPlayer)game.gameBoard.GetWhoseTurn()).MakeMove(game, column);
+                System.out.println();
             }
 
             int row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
             PrintGameBoard(game);
+
             if(game.CheckForWin(row, column - 1)) {
                 System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " is the winner!");
                 break;
