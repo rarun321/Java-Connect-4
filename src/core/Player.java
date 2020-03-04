@@ -32,5 +32,4 @@ public class Player implements IPlayer {
      * @param token players token
      * */
     public void SetToken(String token) { playerToken = token; }
-
 }
