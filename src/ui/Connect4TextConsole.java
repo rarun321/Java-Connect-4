@@ -20,13 +20,22 @@ public class Connect4TextConsole {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter ‘P’ if you want to play against another player; enter ‘C’ to play against computer.");
         String answer = scanner.nextLine();
-        if(answer.equals("P")) CreatePlayersAndRunGame(scanner, game);
-        else CreateComputerAndRunGame(scanner, game);
+        while(true){
+            if(answer.toLowerCase().equals("p")){
+                CreatePlayersAndRunGame(scanner, game);
+                break;
+            }
+            else if(answer.toLowerCase().equals("c")){
+                CreateComputerAndRunGame(scanner, game);
+                break;
+            }
+            else{
+                System.out.println("Invalid input!");
+                answer = scanner.nextLine();
+            }
+        }
     }
 
-    /**<p>Text UI for the connect 4 game</p>*
-     * @param game Connect 4 game object
-     * */
     private static void PrintGameBoard(Connect4 game){
         for (int i = 0; i < game.gameBoard.GetRows(); i++){
             for (int e = 0; e < game.gameBoard.GetColumns(); e++) System.out.print(game.gameBoard.GetPiece(i,e));
@@ -34,9 +43,6 @@ public class Connect4TextConsole {
         }
     }
 
-    /**<p>Text UI for the connect 4 game</p>*
-     * @param game Connect 4 game object
-     * */
     private static void CreatePlayersAndRunGame(Scanner scanner, Connect4 game){
         System.out.println("Player One Name:");
         String playerOneName = scanner.nextLine();
@@ -44,11 +50,18 @@ public class Connect4TextConsole {
         String playerOneToken = scanner.nextLine();
         game.player1 = new Player(playerOneName, playerOneToken);
 
-
         System.out.println("Player Two Name:");
         String playerTwoName = scanner.nextLine();
         System.out.println("Player Two Token:");
         String playerTwoToken = scanner.nextLine();
+        while (true){
+            if(playerOneToken.equals(playerTwoToken)){
+                System.out.println("Players can't have the same token!");
+                System.out.println("Player Two Token:");
+                playerTwoToken = scanner.nextLine();
+            }
+            else break;
+        }
         game.player2 = new Player(playerTwoName, playerTwoToken);
 
         RunConsoleGame(game, scanner);
@@ -59,6 +72,7 @@ public class Connect4TextConsole {
         String playerOneName = scanner.nextLine();
         System.out.println("Player One Token:");
         String playerOneToken = scanner.nextLine();
+
         game.player1 = new Player(playerOneName, playerOneToken);
 
         game.player2 = new Connect4ComputerPlayer();
@@ -66,10 +80,6 @@ public class Connect4TextConsole {
         RunConsoleGame(game, scanner);
     }
 
-    /**<p>Checks if the column the user entered is valid</p>*
-     * @param game connect 4 game object
-     * @param scanner scanner for user input
-     * */
     private static void RunConsoleGame(Connect4 game, Scanner scanner){
         int column = 0;
         String value = "";
