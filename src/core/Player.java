@@ -11,6 +11,7 @@ public class Player implements IPlayer {
     private String playerToken;
 
     public Player(){ }
+    public Player(String playerName, String playerToken){ this.playerName = playerName; this.playerToken = playerToken;}
 
     /**<p>Gets player  name</p>
      * @return player name

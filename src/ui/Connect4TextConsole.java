@@ -1,6 +1,8 @@
 package ui;
 
 import core.Connect4;
+import core.Connect4ComputerPlayer;
+
 import java.util.Scanner;
 
 /**<p>Text UI for the connect 4 game</p>*
@@ -15,13 +17,17 @@ public class Connect4TextConsole {
     {
         Connect4 game = new Connect4();
         Scanner scanner = new Scanner(System.in);
-        CreatePlayersAndRunGame(scanner, game);
+        System.out.println("Enter ‘P’ if you want to play against another player; enter ‘C’ to play against computer.");
+        String answer = scanner.nextLine();
+        if(answer.equals("P")) CreatePlayersAndRunGame(scanner, game);
+        else CreateComputerAndRunGame(scanner, game);
+
     }
 
     /**<p>Text UI for the connect 4 game</p>*
      * @param game Connect 4 game object
      * */
-    public static void PrintGameBoard(Connect4 game){
+    private static void PrintGameBoard(Connect4 game){
         for (int i = 0; i < game.gameBoard.GetRows(); i++){
             for (int e = 0; e < game.gameBoard.GetColumns(); e++) System.out.print(game.gameBoard.GetPiece(i,e));
             System.out.println();
@@ -31,7 +37,7 @@ public class Connect4TextConsole {
     /**<p>Text UI for the connect 4 game</p>*
      * @param game Connect 4 game object
      * */
-    public static void CreatePlayersAndRunGame(Scanner scanner, Connect4 game){
+    private static void CreatePlayersAndRunGame(Scanner scanner, Connect4 game){
         System.out.println("Player One Name:");
         String playerOneName = scanner.nextLine();
         game.player1.SetName(playerOneName);
@@ -49,11 +55,26 @@ public class Connect4TextConsole {
         RunConsoleGame(game, scanner);
     }
 
+    private static void CreateComputerAndRunGame(Scanner scanner, Connect4 game){
+        System.out.println("Player One Name:");
+        String playerOneName = scanner.nextLine();
+        game.player1.SetName(playerOneName);
+        System.out.println("Player One Token:");
+        String playerOneToken = scanner.nextLine();
+        game.player1.SetToken(playerOneToken);
+
+        Connect4ComputerPlayer computerPlayer = new Connect4ComputerPlayer();
+        game.player2.SetName(computerPlayer.GetName());
+        game.player2.SetToken(computerPlayer.GetToken());
+
+        RunConsoleGame(game, scanner);
+    }
+
     /**<p>Checks if the column the user entered is valid</p>*
      * @param game connect 4 game object
      * @param scanner scanner for user input
      * */
-    public static void RunConsoleGame(Connect4 game, Scanner scanner){
+    private static void RunConsoleGame(Connect4 game, Scanner scanner){
         while (true){
             game.FigureOutWhoseTurn();
 
