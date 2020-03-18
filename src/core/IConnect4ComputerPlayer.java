@@ -14,5 +14,5 @@ public interface IConnect4ComputerPlayer {
      * @param previousColumn column of the piece that was placed by previous player
      * @return column
      * */
-    int MakeMove(Connect4 game,int previousColumn);
+    int MakeMove(Connect4 game,int previousColumn, int previousRow);
 }

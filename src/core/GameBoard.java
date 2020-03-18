@@ -76,4 +76,8 @@ public class GameBoard implements IGameBoard {
         if((column > 7 || column < 1) || !(game.CheckIfPieceEqualsEmpty(0, column - 1))) return false;
         return true;
     }
+
+    public String[] GetCoulumBasedOfRow(int row){
+        return gameBoard[row];
+    }
 }

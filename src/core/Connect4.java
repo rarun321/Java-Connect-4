@@ -5,7 +5,6 @@ package core;
  * @version 1.0
  * @since 2020-02-23
  * */
-
 public class Connect4 implements IConnect4 {
     public GameBoard gameBoard;
     public Player player1;
