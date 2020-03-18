@@ -82,6 +82,7 @@ public class Connect4TextConsole {
 
     private static void RunConsoleGame(Connect4 game, Scanner scanner){
         int column = 0;
+        int prevoiusRow = 0;
         String value = "";
 
         while (true){
@@ -104,11 +105,12 @@ public class Connect4TextConsole {
                 }
             }
             else{
-                column = ((Connect4ComputerPlayer)game.gameBoard.GetWhoseTurn()).MakeMove(game, column);
+                column = ((Connect4ComputerPlayer)game.gameBoard.GetWhoseTurn()).MakeMove(game, column - 1, prevoiusRow);
                 System.out.println();
             }
 
             int row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
+            prevoiusRow = row;
             PrintGameBoard(game);
 
             if(game.CheckForWin(row, column - 1)) {
