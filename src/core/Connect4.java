@@ -57,6 +57,30 @@ public class Connect4 implements IConnect4 {
         return true;
     }
 
+<<<<<<< Updated upstream
+=======
+    /**<p>Checks to see if there is piece in the spot that matches the player piece</p>
+     * @param row row on the gameboard
+     * @param column column on the gameboard
+     * @param player player that you want to check the piece of
+     * @return true or false
+     * */
+    public boolean CheckIfPieceEqualsPlayerPiece(int row, int column, Player player){
+        if(gameBoard.GetPiece(row, column).equals("|" + player.GetToken()) || gameBoard.GetPiece(row , column).equals("|" + player.GetToken() + "|")) return true;
+        return false;
+    }
+
+    /**<p>Checks to see if it is an empty spot</p>
+     * @param row row on the gameboard
+     * @param column column on the gameboard
+     * @return true or false
+     * */
+    public boolean CheckIfPieceEqualsEmpty(int row, int column){
+        if(gameBoard.GetPiece(row,column - 1).equals("| ") || gameBoard.GetPiece(row,column - 1).equals("| |")) return true;
+        return false;
+    }
+
+>>>>>>> Stashed changes
     private boolean CheckVertical(int row, int column){
         int pieceCount = 0;
 

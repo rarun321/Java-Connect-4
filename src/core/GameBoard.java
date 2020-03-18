@@ -73,7 +73,7 @@ public class GameBoard implements IGameBoard {
      * @param game connect 4 game object
      * */
     public boolean CheckIfColumnIsFull(int column, Connect4 game){
-        if((column > 7 || column < 1) || !(game.gameBoard.GetPiece(0,column - 1).equals("| ") || game.gameBoard.GetPiece(0,column - 1).equals("| |"))) return false;
+        if((column > 7 || column < 1) || !(game.CheckIfPieceEqualsEmpty(0, column - 1))) return false;
         return true;
     }
 }
