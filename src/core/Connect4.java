@@ -57,8 +57,6 @@ public class Connect4 implements IConnect4 {
         return true;
     }
 
-<<<<<<< Updated upstream
-=======
     /**<p>Checks to see if there is piece in the spot that matches the player piece</p>
      * @param row row on the gameboard
      * @param column column on the gameboard
@@ -80,7 +78,6 @@ public class Connect4 implements IConnect4 {
         return false;
     }
 
->>>>>>> Stashed changes
     private boolean CheckVertical(int row, int column){
         int pieceCount = 0;
 
