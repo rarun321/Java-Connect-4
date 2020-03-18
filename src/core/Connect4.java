@@ -74,7 +74,7 @@ public class Connect4 implements IConnect4 {
      * @return true or false
      * */
     public boolean CheckIfPieceEqualsEmpty(int row, int column){
-        if(gameBoard.GetPiece(row,column - 1).equals("| ") || gameBoard.GetPiece(row,column - 1).equals("| |")) return true;
+        if(gameBoard.GetPiece(row,column).equals("| ") || gameBoard.GetPiece(row, column).equals("| |")) return true;
         return false;
     }
 
