@@ -1,59 +1,97 @@
 package core;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class ComputerDifficulty {
 
-    public int Hard(Connect4 game, int previousRow, int previousColumn){
-        System.out.println(previousRow + " " + previousColumn);
-        String[] H1 = new String[]{"|" + game.player1.GetToken(), "|" + game.player1.GetToken(), "|" + game.player1.GetToken(), "| "};
-        String[] H2 = new String[]{"| ", "|" + game.player1.GetToken(), "|" + game.player1.GetToken(), "|" + game.player1.GetToken()};
-        String[] H3 = new String[]{"|" + game.player1.GetToken(), "| ", "|" + game.player1.GetToken(), "|" + game.player1.GetToken()};
-        String[] H4 = new String[]{"|" + game.player1.GetToken(), "|" + game.player1.GetToken(), "| ", "|" + game.player1.GetToken()};
+    private final int centerColumn = 4;
+    private final int linesOfTwo = 2;
+    private final int linesOfThree = 5;
+    private final int win = 10000;
+    private final int oppLinesOfTwo = 7;
+    private final int oppLinesOfThree = 1000;
 
-        int column = 0;
-        int defualtColumn = 0;
+    public int Hard(Connect4 game){
+        int max = 0;
+        int index = 0;
+        int score = 0;
 
-        for(int i = 0; i < 4; i++){
-            String[] partition = Arrays.copyOfRange(game.gameBoard.GetCoulumBasedOfRow(previousRow), i , i + 4);
-            if(Arrays.equals(partition, H1)){
-                column = i + 4;
-                break;
-            }
-            if(Arrays.equals(partition, H2)){
-                column = i + 1;
-                break;
-            }
-            if(Arrays.equals(partition, H3)){
-                column = i + 2;
-                break;
-            }
-            if(Arrays.equals(partition, H4)){
-                column = i + 3;
-                break;
+        for(int i = 0; i < 7; i++){
+            score = CheckCenterColumn(i) + CheckLinesOfTwo(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player2) + CheckLinesThree(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player2)
+                    + Win(game,5 - game.getNumberOfPiecesGivenColumn(i + 1), i) + CheckLinesTwoOpp(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player1) + CheckLinesThreeOpp(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player1);
+            System.out.print(score + " ");
+            if(score > max){
+                max = score;
+                index = i;
             }
         }
 
-        while(true){
-            defualtColumn = getRandomNumberInRange(previousColumn - 1, previousColumn + 1);
-            if(game.gameBoard.CheckIfColumnIsFull(defualtColumn,game)) break;
+        return index + 1;
+    }
+
+    private int CheckCenterColumn(int column){
+        if(column == 3) return centerColumn;
+        return 0;
+    }
+
+    private int CheckLinesOfTwo(Connect4 game, int row, int column, Player player){
+        int addedScore = 0;
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column, player)) addedScore += linesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column - 1, player)) addedScore += linesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column + 1, player)) addedScore += linesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column + 1, player)) addedScore += linesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column - 1, player)) addedScore += linesOfTwo; } catch(Exception e){}
+
+        return addedScore;
+    }
+
+    private int CheckLinesThree(Connect4 game, int row, int column, Player player){
+        int addedScore = 0;
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column, player) && game.CheckIfPieceEqualsPlayerPiece(row + 2, column, player)) addedScore += linesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column - 1, player) && game.CheckIfPieceEqualsPlayerPiece(row + 2, column - 2, player)) addedScore += linesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column + 2, player)) addedScore += linesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row + 2, column + 2, player)) addedScore += linesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column - 1, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column - 2, player)) addedScore += linesOfThree; } catch(Exception e){}
+
+        return addedScore;
+    }
+
+    private int CheckLinesTwoOpp(Connect4 game, int row, int column, Player player){
+        int addedScore = 0;
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column, player) && game.CheckIfPieceEqualsPlayerPiece(row + 2, column, player)) addedScore += oppLinesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column, player)) addedScore += oppLinesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row, column + 2, player)) addedScore += oppLinesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row, column - 1, player) && game.CheckIfPieceEqualsPlayerPiece(row, column - 2, player)) addedScore += oppLinesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column + 2, player)) addedScore += oppLinesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row + 2, column + 2, player)) addedScore += oppLinesOfTwo; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column - 1, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column - 2, player)) addedScore += oppLinesOfTwo; } catch(Exception e){}
+
+        return addedScore;
+    }
+
+    private int CheckLinesThreeOpp(Connect4 game, int row, int column, Player player){
+        int addedScore = 0;
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column, player) && game.CheckIfPieceEqualsPlayerPiece(row + 2, column, player) && game.CheckIfPieceEqualsPlayerPiece(row + 3, column, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column, player) && game.CheckIfPieceEqualsPlayerPiece(row - 3, column, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row, column + 2, player) && game.CheckIfPieceEqualsPlayerPiece(row, column + 3, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row, column - 1, player) && game.CheckIfPieceEqualsPlayerPiece(row, column - 2, player) && game.CheckIfPieceEqualsPlayerPiece(row, column - 3, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column + 2, player) && game.CheckIfPieceEqualsPlayerPiece(row - 3, column + 3, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row + 1, column + 1, player) && game.CheckIfPieceEqualsPlayerPiece(row + 2, column + 2, player) && game.CheckIfPieceEqualsPlayerPiece(row + 3, column + 3, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
+        try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column - 1, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column - 2, player) && game.CheckIfPieceEqualsPlayerPiece(row - 3, column - 3, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
+
+        return addedScore;
+    }
+
+    private int Win(Connect4 game, int row, int column){
+        if(row == -1) return 0;
+
+        game.gameBoard.SetPiece(column, game.player2);
+        if(game.CheckForWin(row, column) == true) {
+            game.gameBoard.RemovePiece(row, column);
+            return win;
         }
 
-        return column == 0 ? defualtColumn : column;
-    }
-
-    private int getRandomNumberInRange(int min, int max) {
-        Random randomNumber = new Random();
-        return randomNumber.nextInt((max - min) + 1) + min;
-    }
-
-    private int getRandomBetweenTwoNumbers(int number1, int number2) {
-        Random randomNumber = new Random();
-        int rand = randomNumber.nextInt((1 - 0) + 1);
-        if(rand == 0) return number1 + 1;
-        if(rand == 1) return number2 + 1;
-
+        game.gameBoard.RemovePiece(row, column);
         return 0;
     }
 }

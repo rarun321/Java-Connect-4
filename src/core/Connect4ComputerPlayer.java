@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Connect4ComputerPlayer extends Player implements IConnect4ComputerPlayer{
     ComputerDifficulty difficulty = new ComputerDifficulty();
+
     /**<p>Initializes new computer player</p>*/
     public Connect4ComputerPlayer(){
         super("Bot","B");
@@ -21,6 +22,6 @@ public class Connect4ComputerPlayer extends Player implements IConnect4ComputerP
      * */
     @Override
     public int MakeMove(Connect4 game, int previousRow, int previousColumn) {
-        return difficulty.Hard(game, previousRow, previousColumn);
+        return difficulty.Hard(game);
     }
 }

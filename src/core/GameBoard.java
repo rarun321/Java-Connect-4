@@ -58,6 +58,11 @@ public class GameBoard implements IGameBoard {
         return 0;
     }
 
+    public void RemovePiece(int row, int column){
+        if(column == 6) gameBoard[row][column] = "| |";
+        else gameBoard[row][column] = "| ";
+    }
+
     /**<p>Gets the player whose turn it is currently</p>
      * @return the player
      * */

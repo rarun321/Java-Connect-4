@@ -110,6 +110,7 @@ public class Connect4TextConsole {
             }
 
             row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
+            System.out.println(game.getNumberOfPiecesGivenColumn(column));
             PrintGameBoard(game);
 
             if(game.CheckForWin(row, column - 1)) {

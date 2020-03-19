@@ -67,6 +67,14 @@ public class Connect4 implements IConnect4 {
         return false;
     }
 
+    public int getNumberOfPiecesGivenColumn(int column){
+        int count = 0;
+        for(int i = 0; i < 6; i++){
+            if(!CheckIfPieceEqualsEmpty(i, column - 1)) count++;
+        }
+        return count;
+    }
+
     /**<p>Checks to see if it is an empty spot</p>
      * @param row row on the gameboard
      * @param column column on the gameboard
@@ -142,7 +150,7 @@ public class Connect4 implements IConnect4 {
     }
 
 
-    private boolean CheckDiagonalLeft(int row, int column){
+    public boolean CheckDiagonalLeft(int row, int column){
         int pieceCount = 0;
 
         for(int i = 0; i < gameBoard.GetRows() - row; i++){
