@@ -58,6 +58,7 @@ public class GameBoard implements IGameBoard {
         return 0;
     }
 
+    /**<p>Removes piece from board</p>* */
     public void RemovePiece(int row, int column){
         if(column == 6) gameBoard[row][column] = "| |";
         else gameBoard[row][column] = "| ";
@@ -80,9 +81,5 @@ public class GameBoard implements IGameBoard {
     public boolean CheckIfColumnIsFull(int column, Connect4 game){
         if((column > 7 || column < 1) || !(game.CheckIfPieceEqualsEmpty(0, column - 1))) return false;
         return true;
-    }
-
-    public String[] GetCoulumBasedOfRow(int row){
-        return gameBoard[row];
     }
 }

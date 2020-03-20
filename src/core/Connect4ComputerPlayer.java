@@ -8,6 +8,7 @@ import java.util.Random;
  * */
 
 public class Connect4ComputerPlayer extends Player implements IConnect4ComputerPlayer{
+    public String difficultyLevel = "";
     ComputerDifficulty difficulty = new ComputerDifficulty();
 
     /**<p>Initializes new computer player</p>*/
@@ -22,6 +23,10 @@ public class Connect4ComputerPlayer extends Player implements IConnect4ComputerP
      * */
     @Override
     public int MakeMove(Connect4 game, int previousRow, int previousColumn) {
-        return difficulty.Hard(game);
+        if(difficultyLevel.equals("e")) return difficulty.Easy(game, previousColumn);
+        if(difficultyLevel.equals("m")) return difficulty.Medium(game);
+        if(difficultyLevel.equals("h")) return difficulty.Hard(game);
+
+        return 0;
     }
 }

@@ -1,6 +1,6 @@
 package core;
 
-import java.util.Arrays;
+import java.util.Random;
 
 public class ComputerDifficulty {
 
@@ -11,16 +11,58 @@ public class ComputerDifficulty {
     private final int oppLinesOfTwo = 7;
     private final int oppLinesOfThree = 1000;
 
-    public int Hard(Connect4 game){
+    /**<p>Easy computer bot</p>
+     * @param game connect4 game
+     * @param previousColumn column of the piece that was placed by previous player
+     * @return column
+     * */
+    public int Easy(Connect4 game, int previousColumn) {
+        while(true){
+            int column = getRandomNumberInRange(previousColumn - 1, previousColumn + 1);
+            if(game.gameBoard.CheckIfColumnIsFull(column,game)) return column;
+        }
+    }
+
+    /**<p>Medium computer bot</p>
+     * @param game connect4 game
+     * @return column
+     * */
+    public int Medium(Connect4 game){
         int max = 0;
-        int index = 0;
         int score = 0;
+        int index = 0;
 
         for(int i = 0; i < 7; i++){
-            score = CheckCenterColumn(i) + CheckLinesOfTwo(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player2) + CheckLinesThree(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player2)
-                    + Win(game,5 - game.getNumberOfPiecesGivenColumn(i + 1), i) + CheckLinesTwoOpp(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player1) + CheckLinesThreeOpp(game, 5 - game.getNumberOfPiecesGivenColumn(i + 1), i, game.player1);
-            System.out.print(score + " ");
-            if(score > max){
+            score = CheckCenterColumn(i)
+                    + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
+                    + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
+                    + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
+            if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
+                max = score;
+                index = i;
+            }
+        }
+
+        return index + 1;
+    }
+
+    /**<p>Hard computer bot</p>
+     * @param game connect4 game
+     * @return column
+     * */
+    public int Hard(Connect4 game){
+        int max = 0;
+        int score = 0;
+        int index = 0;
+
+        for(int i = 0; i < 7; i++){
+            score = CheckCenterColumn(i)
+                    + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
+                    + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
+                    + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
+                    + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
+                    + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
+            if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
                 max = score;
                 index = i;
             }
@@ -80,6 +122,11 @@ public class ComputerDifficulty {
         try{ if(game.CheckIfPieceEqualsPlayerPiece(row - 1, column - 1, player) && game.CheckIfPieceEqualsPlayerPiece(row - 2, column - 2, player) && game.CheckIfPieceEqualsPlayerPiece(row - 3, column - 3, player)) addedScore += oppLinesOfThree; } catch(Exception e){}
 
         return addedScore;
+    }
+
+    private int getRandomNumberInRange(int min, int max) {
+        Random randomNumber = new Random();
+        return randomNumber.nextInt((max - min) + 1) + min;
     }
 
     private int Win(Connect4 game, int row, int column){

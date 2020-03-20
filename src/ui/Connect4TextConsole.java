@@ -68,6 +68,18 @@ public class Connect4TextConsole {
     }
 
     private static void CreateComputerAndRunGame(Scanner scanner, Connect4 game){
+        System.out.println("Enter 'E' for an easy bot, 'M' for a medium bot, and 'H' for a hard bot");
+        String answerLevel = scanner.nextLine();
+        while(true){
+            if(answerLevel.toLowerCase().equals("e")){ break;}
+            else if(answerLevel.toLowerCase().equals("m")){ break; }
+            else if(answerLevel.toLowerCase().equals("h")){ break; }
+            else{
+                System.out.println("Invalid input!");
+                answerLevel = scanner.nextLine();
+            }
+        }
+
         System.out.println("Player One Name:");
         String playerOneName = scanner.nextLine();
         System.out.println("Player One Token:");
@@ -76,6 +88,7 @@ public class Connect4TextConsole {
         game.player1 = new Player(playerOneName, playerOneToken);
 
         game.player2 = new Connect4ComputerPlayer();
+        ((Connect4ComputerPlayer)game.player2).difficultyLevel = answerLevel;
 
         RunConsoleGame(game, scanner);
     }
@@ -110,7 +123,7 @@ public class Connect4TextConsole {
             }
 
             row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
-            System.out.println(game.getNumberOfPiecesGivenColumn(column));
+            System.out.println(game.GetNumberOfPiecesInGivenColumn(column));
             PrintGameBoard(game);
 
             if(game.CheckForWin(row, column - 1)) {

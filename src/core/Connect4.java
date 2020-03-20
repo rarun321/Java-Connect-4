@@ -67,7 +67,11 @@ public class Connect4 implements IConnect4 {
         return false;
     }
 
-    public int getNumberOfPiecesGivenColumn(int column){
+    /**<p>Returns number of pieces in the column</p>
+     * @param column column on the gameboard
+     * @return number of pieces
+     * */
+    public int GetNumberOfPiecesInGivenColumn(int column){
         int count = 0;
         for(int i = 0; i < 6; i++){
             if(!CheckIfPieceEqualsEmpty(i, column - 1)) count++;
