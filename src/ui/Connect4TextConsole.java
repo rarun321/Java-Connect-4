@@ -4,7 +4,6 @@ import core.Connect4;
 import core.Connect4ComputerPlayer;
 import core.Player;
 import javafx.application.Application;
-import javafx.stage.Stage;
 
 import java.util.Scanner;
 
@@ -105,7 +104,6 @@ public class Connect4TextConsole {
             }
 
             row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
-            System.out.println(game.GetNumberOfPiecesInGivenColumn(column));
             game.gameBoard.PrintGameBoard(game);
 
             if(game.CheckForWin(row, column - 1)) {
