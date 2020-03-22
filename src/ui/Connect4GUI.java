@@ -85,15 +85,19 @@ public class Connect4GUI extends Application {
             int botColumn = ((Connect4ComputerPlayer)game.player2).MakeMove(game) - 1;
             int botRow = game.gameBoard.SetPiece(botColumn, game.gameBoard.GetWhoseTurn());
             FillPiece(botRow,botColumn);
-            if(game.CheckForWin(botRow,botColumn)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!!");
-            if(game.CheckForDraw()) SendAlert("Draw!");
+            if(game.CheckForWin(botRow,botColumn)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!!", ButtonType.FINISH);
+            if(game.CheckForDraw()) SendAlert("Draw!", ButtonType.FINISH);
             game.FigureOutWhoseTurn();
         }
         else{
+            if(!game.CheckIfPieceEqualsEmpty(0,column)){
+                SendAlert("That column is full! Choose another column!", ButtonType.OK);
+                return;
+            }
             int row = game.gameBoard.SetPiece(column,game.gameBoard.GetWhoseTurn());
             FillPiece(row,column);
-            if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName()+ " wins!!");
-            if(game.CheckForDraw()) SendAlert("Draw!");
+            if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName()+ " wins!!", ButtonType.FINISH);
+            if(game.CheckForDraw()) SendAlert("Draw!", ButtonType.FINISH);
             game.FigureOutWhoseTurn();
         }
     }
@@ -113,8 +117,8 @@ public class Connect4GUI extends Application {
         boardPane.add(circle, column,row);
     }
 
-    private void SendAlert(String message){
-        Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.FINISH);
+    private void SendAlert(String message, ButtonType type){
+        Alert alert = new Alert(Alert.AlertType.NONE, message, type);
         alert.showAndWait();
 
         if(alert.getResult() == ButtonType.FINISH) System.exit(0);
