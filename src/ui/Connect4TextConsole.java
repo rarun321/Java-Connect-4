@@ -59,7 +59,7 @@ public class Connect4TextConsole {
 
         game.player1 = new Player("Player 1", "X");
         game.player2 = new Connect4ComputerPlayer();
-        ((Connect4ComputerPlayer)game.player2).difficultyLevel = answerLevel;
+        ((Connect4ComputerPlayer)game.player2).difficultyLevel = answerLevel.toLowerCase();
     }
 
 //    private static void RunConsoleGame(Connect4 game, Scanner scanner){

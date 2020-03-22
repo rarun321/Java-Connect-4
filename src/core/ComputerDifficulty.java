@@ -13,30 +13,47 @@ public class ComputerDifficulty {
 
     /**<p>Easy computer bot</p>
      * @param game connect4 game
-     * @param previousColumn column of the piece that was placed by previous player
      * @return column
      * */
-    public int Easy(Connect4 game, int previousColumn) {
-        while(true){
-            int column = getRandomNumberInRange(previousColumn - 1, previousColumn + 1);
-            if(game.gameBoard.CheckIfColumnIsFull(column,game)) return column;
+    public int Easy(Connect4 game, int depth, int index, int score, int max) {
+        if(depth == 2) return index + 1;
+
+        for(int i = 0; i < 7; i++){
+            score = CheckCenterColumn(i)
+                    + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
+                    + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
+                    + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
+                    + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
+                    + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
+            int row = game.gameBoard.SetPiece(i, game.player1);
+            Hard(game, depth + 1, index, score, max);
+            game.gameBoard.RemovePiece(row, i);
+            if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
+                max = score;
+                index = i;
+            }
         }
+
+        return index + 1;
     }
 
     /**<p>Medium computer bot</p>
      * @param game connect4 game
      * @return column
      * */
-    public int Medium(Connect4 game){
-        int max = 0;
-        int score = 0;
-        int index = 0;
+    public int Medium(Connect4 game, int depth, int index, int score, int max){
+        if(depth == 4) return index + 1;
 
         for(int i = 0; i < 7; i++){
             score = CheckCenterColumn(i)
                     + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
+                    + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
-                    + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
+                    + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
+                    + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
+            int row = game.gameBoard.SetPiece(i, game.player1);
+            Hard(game, depth + 1, index, score, max);
+            game.gameBoard.RemovePiece(row, i);
             if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
                 max = score;
                 index = i;
@@ -50,10 +67,9 @@ public class ComputerDifficulty {
      * @param game connect4 game
      * @return column
      * */
-    public int Hard(Connect4 game){
-        int max = 0;
-        int score = 0;
-        int index = 0;
+    public int Hard(Connect4 game, int depth, int index, int score, int max){
+
+        if(depth == 7) return index + 1;
 
         for(int i = 0; i < 7; i++){
             score = CheckCenterColumn(i)
@@ -62,6 +78,9 @@ public class ComputerDifficulty {
                     + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
                     + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
+            int row = game.gameBoard.SetPiece(i, game.player1);
+            Hard(game, depth + 1, index, score, max);
+            game.gameBoard.RemovePiece(row, i);
             if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
                 max = score;
                 index = i;

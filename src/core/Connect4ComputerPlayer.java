@@ -1,5 +1,4 @@
 package core;
-import java.util.Random;
 
 /**<p>AI for the connect 4 game</p>*
  * @author Rithvik Arun
@@ -18,14 +17,13 @@ public class Connect4ComputerPlayer extends Player implements IConnect4ComputerP
 
     /**<p>Make move for the computer based on the other players turn</p>
      * @param game connect4 game
-     * @param previousColumn column of the piece that was placed by previous player
      * @return column
      * */
     @Override
-    public int MakeMove(Connect4 game, int previousRow, int previousColumn) {
-        if(difficultyLevel.equals("e")) return difficulty.Easy(game, previousColumn);
-        if(difficultyLevel.equals("m")) return difficulty.Medium(game);
-        if(difficultyLevel.equals("h")) return difficulty.Hard(game);
+    public int MakeMove(Connect4 game) {
+        if(difficultyLevel.equals("e")) return difficulty.Easy(game, 0,0,0,0);
+        if(difficultyLevel.equals("m")) return difficulty.Medium(game,0,0,0,0);
+        if(difficultyLevel.equals("h")) return difficulty.Hard(game,0,0,0,0);
 
         return 0;
     }

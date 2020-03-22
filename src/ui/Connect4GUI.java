@@ -22,8 +22,6 @@ public class Connect4GUI extends Application {
 
     public static Connect4 game = new Connect4();
     private final GridPane boardPane = new GridPane();
-    private int previousRow = 0;
-    private int previousColumn = 0;
 
     public static void main(String[] args) { launch(args); }
 
@@ -84,8 +82,8 @@ public class Connect4GUI extends Application {
 
     private void RunGameUtil(int column, boolean bot){
         if(bot){
-            int botColumn = ((Connect4ComputerPlayer)game.player2).MakeMove(game,previousRow,previousColumn) - 1;
-            int botRow = game.gameBoard.SetPiece(botColumn,game.gameBoard.GetWhoseTurn());
+            int botColumn = ((Connect4ComputerPlayer)game.player2).MakeMove(game) - 1;
+            int botRow = game.gameBoard.SetPiece(botColumn, game.gameBoard.GetWhoseTurn());
             FillPiece(botRow,botColumn);
             if(game.CheckForWin(botRow,botColumn)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!! Do you want to play again?");
             if(game.CheckForDraw()) SendAlert("Draw! Do you want to play again?");
@@ -120,7 +118,7 @@ public class Connect4GUI extends Application {
         alert.showAndWait();
 
         if (alert.getResult() == ButtonType.YES) {
-            //do stuff
+            
         }
     }
 }
