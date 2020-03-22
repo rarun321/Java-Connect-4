@@ -46,6 +46,7 @@ public class Connect4 implements IConnect4 {
         if(CheckVertical(row,column) || CheckHorizontal(row, column) || CheckDiagonalRight(row, column) || CheckDiagonalLeft(row, column)) return true;
         return false;
     }
+
     /**<p>Checks to see if the game has ended in a draw</p>
      * @return true or false
      * */
@@ -154,7 +155,7 @@ public class Connect4 implements IConnect4 {
     }
 
 
-    public boolean CheckDiagonalLeft(int row, int column){
+    private boolean CheckDiagonalLeft(int row, int column){
         int pieceCount = 0;
 
         for(int i = 0; i < gameBoard.GetRows() - row; i++){
