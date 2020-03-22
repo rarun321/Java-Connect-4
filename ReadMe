@@ -1,14 +1,4 @@
-Easy:
-This algorithm uses a random number generator to generete one of three spots.
-The spots are a range from where the previous token was placed.
-The spots can either ben on the sides or on top.
-
-Medium:
-This algorithm uses a scoring system to predict the best move for the ai based on the previous moves.
-It only uses three scores.
-
-Hard:
-This algorithm uses a scoring system to predict the best move for the ai based on the previous moves.
-It only only uses five scores.
-I will eventually change this to a recursive function which will test all possibilities and will make a move based on future moves that could be made.
-
+Connect4 AI:
+All three AI's use a scoring system to predict players next move. The better probability a column has the better chance it will win.
+The algorithim uses recursion and each level has a different depth that the recursion reaches. This makes it so the ai will only see a certain amount
+into the future to predict the players next move.
