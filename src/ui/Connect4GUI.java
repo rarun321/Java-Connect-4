@@ -1,11 +1,14 @@
 package ui;
 
 import core.Connect4;
+import core.Connect4ComputerPlayer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -19,16 +22,14 @@ public class Connect4GUI extends Application {
 
     public static Connect4 game = new Connect4();
     private final GridPane boardPane = new GridPane();
+    private int previousRow = 0;
+    private int previousColumn = 0;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) { launch(args); }
 
-    public void start(Stage stage) {
-        CreateGUIBoard(stage);
-    }
+    public void start(Stage stage) {CreateGUIBoard(stage);}
 
-    public void CreateGUIBoard(Stage stage){
+    private void CreateGUIBoard(Stage stage){
 
         boardPane.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -67,39 +68,39 @@ public class Connect4GUI extends Application {
         stage.show();
     }
 
-    public void RunGame(ActionEvent e){
+    private void RunGame(ActionEvent e){
         String buttonText = ((Button)e.getSource()).getText();
-        if(buttonText.equals("Column 1")){
-            FillPiece(game.gameBoard.SetPiece(0,game.gameBoard.GetWhoseTurn()),0);
+
+        if(buttonText.equals("Column 1"))RunGameUtil(0, false);
+        else if(buttonText.equals("Column 2"))RunGameUtil(1,false);
+        else if(buttonText.equals("Column 3"))RunGameUtil(2,false);
+        else if(buttonText.equals("Column 4"))RunGameUtil(3,false);
+        else if(buttonText.equals("Column 5"))RunGameUtil(4,false);
+        else if(buttonText.equals("Column 6"))RunGameUtil(5,false);
+        else if(buttonText.equals("Column 7"))RunGameUtil(6,false);
+
+        if(game.gameBoard.GetWhoseTurn().GetName().equals("Bot")) RunGameUtil(0,true);
+    }
+
+    private void RunGameUtil(int column, boolean bot){
+        if(bot){
+            int botColumn = ((Connect4ComputerPlayer)game.player2).MakeMove(game,previousRow,previousColumn) - 1;
+            int botRow = game.gameBoard.SetPiece(botColumn,game.gameBoard.GetWhoseTurn());
+            FillPiece(botRow,botColumn);
+            if(game.CheckForWin(botRow,botColumn)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!! Do you want to play again?");
+            if(game.CheckForDraw()) SendAlert("Draw! Do you want to play again?");
             game.FigureOutWhoseTurn();
         }
-        else if(buttonText.equals("Column 2")){
-            FillPiece(game.gameBoard.SetPiece(1,game.gameBoard.GetWhoseTurn()),1);
-            game.FigureOutWhoseTurn();
-        }
-        else if(buttonText.equals("Column 3")){
-            FillPiece(game.gameBoard.SetPiece(2,game.gameBoard.GetWhoseTurn()),2);
-            game.FigureOutWhoseTurn();
-        }
-        else if(buttonText.equals("Column 4")){
-            FillPiece(game.gameBoard.SetPiece(3,game.gameBoard.GetWhoseTurn()),3);
-            game.FigureOutWhoseTurn();
-        }
-        else if(buttonText.equals("Column 5")){
-            FillPiece(game.gameBoard.SetPiece(4,game.gameBoard.GetWhoseTurn()),4);
-            game.FigureOutWhoseTurn();
-        }
-        else if(buttonText.equals("Column 6")){
-            FillPiece(game.gameBoard.SetPiece(5,game.gameBoard.GetWhoseTurn()),5);
-            game.FigureOutWhoseTurn();
-        }
-        else if(buttonText.equals("Column 7")){
-            FillPiece(game.gameBoard.SetPiece(6,game.gameBoard.GetWhoseTurn()),6);
+        else{
+            int row = game.gameBoard.SetPiece(column,game.gameBoard.GetWhoseTurn());
+            FillPiece(row,column);
+            if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!! Do you want to play again?");
+            if(game.CheckForDraw()) SendAlert("Draw! Do you want to play again?");
             game.FigureOutWhoseTurn();
         }
     }
 
-    public void FillPiece(int row, int column){
+    private void FillPiece(int row, int column){
         Circle circle = new Circle(300,0,45);
         circle.centerXProperty();
         if(game.gameBoard.GetWhoseTurn() == game.player1){
@@ -112,5 +113,14 @@ public class Connect4GUI extends Application {
         }
         circle.setStrokeWidth(10);
         boardPane.add(circle, column,row);
+    }
+
+    private void SendAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            //do stuff
+        }
     }
 }

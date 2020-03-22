@@ -58,6 +58,13 @@ public class GameBoard implements IGameBoard {
         return 0;
     }
 
+    public void PrintGameBoard(Connect4 game){
+        for (int i = 0; i < game.gameBoard.GetRows(); i++){
+            for (int e = 0; e < game.gameBoard.GetColumns(); e++) System.out.print(game.gameBoard.GetPiece(i,e));
+            System.out.println();
+        }
+    }
+
     /**<p>Removes piece from board</p>* */
     public void RemovePiece(int row, int column){
         if(column == 6) gameBoard[row][column] = "| |";

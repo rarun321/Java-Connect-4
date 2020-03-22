@@ -39,13 +39,6 @@ public class Connect4TextConsole {
         }
     }
 
-    private static void PrintGameBoard(Connect4 game){
-        for (int i = 0; i < game.gameBoard.GetRows(); i++){
-            for (int e = 0; e < game.gameBoard.GetColumns(); e++) System.out.print(game.gameBoard.GetPiece(i,e));
-            System.out.println();
-        }
-    }
-
     private static void CreatePlayersAndRunGame(Scanner scanner, Connect4 game){
         game.player1 = new Player("Player 1", "X");
         game.player2 = new Player("Player 2", "Y");
