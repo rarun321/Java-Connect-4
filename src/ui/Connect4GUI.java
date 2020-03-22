@@ -85,15 +85,15 @@ public class Connect4GUI extends Application {
             int botColumn = ((Connect4ComputerPlayer)game.player2).MakeMove(game) - 1;
             int botRow = game.gameBoard.SetPiece(botColumn, game.gameBoard.GetWhoseTurn());
             FillPiece(botRow,botColumn);
-            if(game.CheckForWin(botRow,botColumn)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!! Do you want to play again?");
-            if(game.CheckForDraw()) SendAlert("Draw! Do you want to play again?");
+            if(game.CheckForWin(botRow,botColumn)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!!");
+            if(game.CheckForDraw()) SendAlert("Draw!");
             game.FigureOutWhoseTurn();
         }
         else{
             int row = game.gameBoard.SetPiece(column,game.gameBoard.GetWhoseTurn());
             FillPiece(row,column);
-            if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!! Do you want to play again?");
-            if(game.CheckForDraw()) SendAlert("Draw! Do you want to play again?");
+            if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName()+ " wins!!");
+            if(game.CheckForDraw()) SendAlert("Draw!");
             game.FigureOutWhoseTurn();
         }
     }
@@ -114,11 +114,9 @@ public class Connect4GUI extends Application {
     }
 
     private void SendAlert(String message){
-        Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.FINISH);
         alert.showAndWait();
 
-        if (alert.getResult() == ButtonType.YES) {
-            
-        }
+        if(alert.getResult() == ButtonType.FINISH) System.exit(0);
     }
 }

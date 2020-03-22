@@ -19,17 +19,30 @@ public class Connect4TextConsole {
     {
         Connect4 game = new Connect4();
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter ‘T’ if you want to play using a text console; enter ‘G’ to play using a gui.");
+        String platform = scanner.nextLine();
+        while(true){
+            if(platform.toLowerCase().equals("t")) break;
+            else if(platform.toLowerCase().equals("g")) break;
+            else{
+                System.out.println("Invalid input!");
+                platform = scanner.nextLine();
+            }
+        }
+
         System.out.println("Enter ‘P’ if you want to play against another player; enter ‘C’ to play against computer.");
         String answer = scanner.nextLine();
         while(true){
             if(answer.toLowerCase().equals("p")){
                 CreatePlayersAndRunGame(scanner, game);
-                RunGUIGame(game, args);
+                if(platform.toLowerCase().equals("t")) RunConsoleGame(game,scanner);
+                else RunGUIGame(game, args);
                 break;
             }
             else if(answer.toLowerCase().equals("c")){
                 CreateComputerAndRunGame(scanner, game);
-                RunGUIGame(game, args);
+                if(platform.toLowerCase().equals("t")) RunConsoleGame(game,scanner);
+                else RunGUIGame(game, args);
                 break;
             }
             else{
@@ -62,49 +75,49 @@ public class Connect4TextConsole {
         ((Connect4ComputerPlayer)game.player2).difficultyLevel = answerLevel.toLowerCase();
     }
 
-//    private static void RunConsoleGame(Connect4 game, Scanner scanner){
-//        int column = 0;
-//        int row = 0;
-//        String value = "";
-//
-//        while (true){
-//            game.FigureOutWhoseTurn();
-//
-//            if(game.gameBoard.GetWhoseTurn().GetName() != "Bot"){
-//                System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
-//                value = scanner.nextLine();
-//
-//                while(!value.matches("[1-7]+")){
-//                    System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
-//                    value = scanner.nextLine();
-//                }
-//
-//                column = Integer.valueOf(value);
-//
-//                while (!game.gameBoard.CheckIfColumnIsFull(column, game)){
-//                    System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
-//                    column = scanner.nextInt();
-//                }
-//            }
-//            else{
-//                column = ((Connect4ComputerPlayer)game.gameBoard.GetWhoseTurn()).MakeMove(game, row,column - 1);
-//                System.out.println();
-//            }
-//
-//            row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
-//            System.out.println(game.GetNumberOfPiecesInGivenColumn(column));
-//            PrintGameBoard(game);
-//
-//            if(game.CheckForWin(row, column - 1)) {
-//                System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " is the winner!");
-//                break;
-//            }
-//            else if(game.CheckForDraw()){
-//                System.out.println("It's a draw!");
-//                break;
-//            }
-//        }
-//    }
+    private static void RunConsoleGame(Connect4 game, Scanner scanner){
+        int column;
+        int row;
+        String value;
+
+        while (true){
+            game.FigureOutWhoseTurn();
+
+            if(game.gameBoard.GetWhoseTurn().GetName() != "Bot"){
+                System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
+                value = scanner.nextLine();
+
+                while(!value.matches("[1-7]+")){
+                    System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
+                    value = scanner.nextLine();
+                }
+
+                column = Integer.valueOf(value);
+
+                while (!game.gameBoard.CheckIfColumnIsFull(column, game)){
+                    System.out.println("Invalid input! " + game.gameBoard.GetWhoseTurn().GetName() + " it's still your turn! Pick a column from 1-7");
+                    column = scanner.nextInt();
+                }
+            }
+            else{
+                column = ((Connect4ComputerPlayer)game.gameBoard.GetWhoseTurn()).MakeMove(game);
+                System.out.println();
+            }
+
+            row = game.gameBoard.SetPiece(column - 1, game.gameBoard.GetWhoseTurn());
+            System.out.println(game.GetNumberOfPiecesInGivenColumn(column));
+            game.gameBoard.PrintGameBoard(game);
+
+            if(game.CheckForWin(row, column - 1)) {
+                System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " is the winner!");
+                break;
+            }
+            else if(game.CheckForDraw()){
+                System.out.println("It's a draw!");
+                break;
+            }
+        }
+    }
 
     private static void RunGUIGame(Connect4 game, String[] args){
         Connect4GUI gui = new Connect4GUI();

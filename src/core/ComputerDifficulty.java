@@ -1,6 +1,6 @@
 package core;
 
-import java.util.Random;
+import java.util.ArrayList;
 
 public class ComputerDifficulty {
 
@@ -18,17 +18,16 @@ public class ComputerDifficulty {
     public int Easy(Connect4 game, int depth, int index, int score, int max) {
         if(depth == 2) return index + 1;
 
-        for(int i = 0; i < 7; i++){
+        for (Object obj : AIUtil(game)) {
+            int i = (int)obj;
             score = CheckCenterColumn(i)
-                    + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
-                    + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
-                    + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
-                    + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
+                    + Win(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
+                    + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
             Hard(game, depth + 1, index, score, max);
             game.gameBoard.RemovePiece(row, i);
-            if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
+            if (score > max) {
                 max = score;
                 index = i;
             }
@@ -44,17 +43,18 @@ public class ComputerDifficulty {
     public int Medium(Connect4 game, int depth, int index, int score, int max){
         if(depth == 4) return index + 1;
 
-        for(int i = 0; i < 7; i++){
+        for (Object obj : AIUtil(game)) {
+            int i = (int)obj;
             score = CheckCenterColumn(i)
                     + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
-                    + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
+                    + Win(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
                     + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
             Hard(game, depth + 1, index, score, max);
             game.gameBoard.RemovePiece(row, i);
-            if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
+            if (score > max) {
                 max = score;
                 index = i;
             }
@@ -71,17 +71,18 @@ public class ComputerDifficulty {
 
         if(depth == 7) return index + 1;
 
-        for(int i = 0; i < 7; i++){
+        for (Object obj : AIUtil(game)) {
+            int i = (int)obj;
             score = CheckCenterColumn(i)
                     + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
-                    + Win(game,5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
+                    + Win(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
                     + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
             Hard(game, depth + 1, index, score, max);
             game.gameBoard.RemovePiece(row, i);
-            if(score > max && game.gameBoard.CheckIfColumnIsFull(index + 1, game)){
+            if (score > max) {
                 max = score;
                 index = i;
             }
@@ -143,9 +144,15 @@ public class ComputerDifficulty {
         return addedScore;
     }
 
-    private int getRandomNumberInRange(int min, int max) {
-        Random randomNumber = new Random();
-        return randomNumber.nextInt((max - min) + 1) + min;
+    private Object[] AIUtil(Connect4 game){
+        ArrayList<Integer> list = new ArrayList();
+        for(int i = 0; i < 7; i++){
+            if (game.CheckIfPieceEqualsEmpty(0, i)) {
+                list.add(i);
+            }
+        }
+
+        return list.toArray();
     }
 
     private int Win(Connect4 game, int row, int column){
