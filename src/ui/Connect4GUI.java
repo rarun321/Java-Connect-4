@@ -23,8 +23,6 @@ public class Connect4GUI extends Application {
     public static Connect4 game = new Connect4();
     private final GridPane boardPane = new GridPane();
 
-    public static void main(String[] args) { launch(args); }
-
     public void start(Stage stage) {CreateGUIBoard(stage);}
 
     private void CreateGUIBoard(Stage stage){
