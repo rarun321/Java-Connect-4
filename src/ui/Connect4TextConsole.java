@@ -1,8 +1,6 @@
 package ui;
 
-import core.Connect4;
-import core.Connect4ComputerPlayer;
-import core.Player;
+import core.*;
 import javafx.application.Application;
 
 import java.util.Scanner;
@@ -33,15 +31,15 @@ public class Connect4TextConsole {
         String answer = scanner.nextLine();
         while(true){
             if(answer.toLowerCase().equals("p")){
-                CreatePlayersAndRunGame(scanner, game);
-                if(platform.toLowerCase().equals("t")) RunConsoleGame(game,scanner);
-                else RunGUIGame(game, args);
+                CreatePlayers(scanner, game);
+                if(platform.toLowerCase().equals("t")) RunConsoleGameLocal(game,scanner);
+                else RunGUIGameLocal(game, args);
                 break;
             }
             else if(answer.toLowerCase().equals("c")){
-                CreateComputerAndRunGame(scanner, game);
-                if(platform.toLowerCase().equals("t")) RunConsoleGame(game,scanner);
-                else RunGUIGame(game, args);
+                CreateComputer(scanner, game);
+                if(platform.toLowerCase().equals("t")) RunConsoleGameLocal(game,scanner);
+                else RunGUIGameLocal(game, args);
                 break;
             }
             else{
@@ -51,12 +49,14 @@ public class Connect4TextConsole {
         }
     }
 
-    private static void CreatePlayersAndRunGame(Scanner scanner, Connect4 game){
+    private static void CreatePlayers(Scanner scanner, Connect4 game){
         game.player1 = new Player("Player 1", "X");
         game.player2 = new Player("Player 2", "Y");
+        game.client = new Connect4Client(game);
+        game.client.ConnectToServer();
     }
 
-    private static void CreateComputerAndRunGame(Scanner scanner, Connect4 game){
+    private static void CreateComputer(Scanner scanner, Connect4 game){
         System.out.println("Enter 'E' for an easy bot, 'M' for a medium bot, and 'H' for a hard bot");
         String answerLevel = scanner.nextLine();
         while(true){
@@ -74,7 +74,7 @@ public class Connect4TextConsole {
         ((Connect4ComputerPlayer)game.player2).difficultyLevel = answerLevel.toLowerCase();
     }
 
-    private static void RunConsoleGame(Connect4 game, Scanner scanner){
+    private static void RunConsoleGameLocal(Connect4 game, Scanner scanner){
         int column;
         int row;
         String value;
@@ -117,10 +117,11 @@ public class Connect4TextConsole {
         }
     }
 
-    private static void RunGUIGame(Connect4 game, String[] args){
+    private static void RunGUIGameLocal(Connect4 game, String[] args){
         Connect4GUI gui = new Connect4GUI();
         game.FigureOutWhoseTurn();
         gui.game = game;
+
         Application.launch(Connect4GUI.class, args);
     }
 }

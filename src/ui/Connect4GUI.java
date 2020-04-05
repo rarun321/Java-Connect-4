@@ -1,6 +1,7 @@
 package ui;
 
 import core.Connect4;
+import core.Connect4Client;
 import core.Connect4ComputerPlayer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -17,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Connect4GUI extends Application {
 
@@ -53,7 +56,13 @@ public class Connect4GUI extends Application {
         for(int i = 0; i < game.gameBoard.GetColumns(); i++){
             Button button = new Button("Column " + (i + 1));
             button.setMinWidth(100);
-            button.setOnAction(e-> RunGame(e));
+            button.setOnAction(e-> {
+                try {
+                    RunGame(e);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
             boardPane.add(button,i,8);
         }
 
@@ -64,8 +73,13 @@ public class Connect4GUI extends Application {
         stage.show();
     }
 
-    private void RunGame(ActionEvent e){
+    private void RunGame(ActionEvent e) throws IOException {
         String buttonText = ((Button)e.getSource()).getText();
+
+        if(game.client != null) {
+            game.client.SendColumnServer(Integer.valueOf(buttonText.substring(buttonText.length() - 1)) - 1);
+            return;
+        }
 
         if(buttonText.equals("Column 1"))RunGameUtil(0, false);
         else if(buttonText.equals("Column 2"))RunGameUtil(1,false);
@@ -100,7 +114,7 @@ public class Connect4GUI extends Application {
         }
     }
 
-    private void FillPiece(int row, int column){
+    public void FillPiece(int row, int column){
         Circle circle = new Circle(300,0,45);
         circle.centerXProperty();
         if(game.gameBoard.GetWhoseTurn() == game.player1){

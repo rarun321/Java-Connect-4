@@ -9,6 +9,7 @@ public class Connect4 implements IConnect4 {
     public GameBoard gameBoard;
     public Player player1;
     public Player player2;
+    public Connect4Client client;
 
     private final int winCheck = 4;
 
