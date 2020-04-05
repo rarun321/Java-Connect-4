@@ -1,8 +1,8 @@
 package ui;
 
 import core.Connect4;
-import core.Connect4Client;
 import core.Connect4ComputerPlayer;
+import core.ServerMessages;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -27,6 +27,21 @@ public class Connect4GUI extends Application {
     private final GridPane boardPane = new GridPane();
 
     public void start(Stage stage) {CreateGUIBoard(stage);}
+
+    private void FillPiece(int row, int column){
+        Circle circle = new Circle(300,0,45);
+        circle.centerXProperty();
+        if(game.gameBoard.GetWhoseTurn() == game.player1){
+            circle.setStroke(Color.RED);
+            circle.setFill(Color.RED);
+        }
+        else{
+            circle.setStroke(Color.YELLOW);
+            circle.setFill(Color.YELLOW);
+        }
+        circle.setStrokeWidth(10);
+        boardPane.add(circle, column,row);
+    }
 
     private void CreateGUIBoard(Stage stage){
 
@@ -77,7 +92,19 @@ public class Connect4GUI extends Application {
         String buttonText = ((Button)e.getSource()).getText();
 
         if(game.client != null) {
-            game.client.SendColumnServer(Integer.valueOf(buttonText.substring(buttonText.length() - 1)) - 1);
+            int column = Integer.valueOf(buttonText.substring(buttonText.length() - 1));
+            String message = game.client.SendColumnToServer(column);
+            if(message.equals(ServerMessages.Valid.toString())){
+                column -= 1;
+                int row = game.gameBoard.SetPiece(column ,game.gameBoard.GetWhoseTurn());
+                FillPiece(row,column);
+            }
+            else if(message.equals(ServerMessages.ColumnFull.toString())){
+                SendAlert("That column is full! Choose another column!", ButtonType.OK);
+            }
+            else if(message.equals(ServerMessages.Players2Turn.toString())){
+                SendAlert("It is player 2's turn!", ButtonType.OK);
+            }
             return;
         }
 
@@ -112,21 +139,6 @@ public class Connect4GUI extends Application {
             if(game.CheckForDraw()) SendAlert("Draw!", ButtonType.FINISH);
             game.FigureOutWhoseTurn();
         }
-    }
-
-    public void FillPiece(int row, int column){
-        Circle circle = new Circle(300,0,45);
-        circle.centerXProperty();
-        if(game.gameBoard.GetWhoseTurn() == game.player1){
-            circle.setStroke(Color.RED);
-            circle.setFill(Color.RED);
-        }
-        else{
-            circle.setStroke(Color.YELLOW);
-            circle.setFill(Color.YELLOW);
-        }
-        circle.setStrokeWidth(10);
-        boardPane.add(circle, column,row);
     }
 
     private void SendAlert(String message, ButtonType type){

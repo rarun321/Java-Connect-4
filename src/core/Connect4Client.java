@@ -1,5 +1,7 @@
 package core;
 
+import ui.Connect4GUI;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -24,7 +26,9 @@ public class Connect4Client{
         }
     }
 
-    public void SendColumnServer(int column) throws IOException {
+    public String SendColumnToServer(int column) throws IOException {
         toServer.writeInt(column);
+        String status = fromServer.readUTF();
+        return status;
     }
 }

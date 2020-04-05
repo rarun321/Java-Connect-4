@@ -119,8 +119,9 @@ public class Connect4TextConsole {
 
     private static void RunGUIGameLocal(Connect4 game, String[] args){
         Connect4GUI gui = new Connect4GUI();
-        game.FigureOutWhoseTurn();
         gui.game = game;
+
+        game.FigureOutWhoseTurn();
 
         Application.launch(Connect4GUI.class, args);
     }

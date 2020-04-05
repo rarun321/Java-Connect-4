@@ -5,5 +5,6 @@ public enum ServerMessages {
     Win,
     Draw,
     Players1Turn,
-    Players2Turn
+    Players2Turn,
+    Valid
 }

@@ -49,6 +49,7 @@ class HandleGame implements Runnable{
 
         Connect4 game = new Connect4();
         game.player1 = new Player("Player 1", "X");
+        game.FigureOutWhoseTurn();
         this.game = game;
         //game.player2 = new Player("Player 2", "Y");
     }
@@ -67,14 +68,23 @@ class HandleGame implements Runnable{
         while(true){
             try {
                 int column = fromPlayer1.readInt();
+                if(game.gameBoard.GetWhoseTurn() != game.player1){
+                    toPlayer1.writeUTF(ServerMessages.Players2Turn.toString());
+                }
+                else if(game.gameBoard.CheckIfColumnIsFull(column, game) == false){
+                    toPlayer1.writeUTF(ServerMessages.ColumnFull.toString());
+                }
+                
+                else{
+                    toPlayer1.writeUTF(ServerMessages.Valid.toString());
+                    game.gameBoard.SetPiece(column, game.player1);
+                    game.FigureOutWhoseTurn();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void RunGameChecks(int column){
-        if(game.gameBoard.CheckIfColumnIsFull(column, game))
     }
 }
 
