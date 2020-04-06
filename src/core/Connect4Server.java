@@ -70,50 +70,51 @@ class HandleGame implements Runnable{
             System.out.println("Error in run (Handle Class): " + e.getMessage());
         }
 
-            while(true){
-                try {
-                    int column = fromPlayer1.readInt();
-                    int row = game.gameBoard.SetPiece(column, game.player1);
-                    game.gameBoard.PrintGameBoard(game);
-                    System.out.println(column);
-                    if(game.CheckForWin(row, column)){
-                        System.out.print("Win Player 1");
-                        toPlayer1.writeInt(ServerMessages.Win);
-                        toPlayer2.writeInt(column);
-                        toPlayer2.writeInt(ServerMessages.Win);
-                    }
-                    else if(game.CheckForDraw()){
-                        toPlayer2.writeInt(ServerMessages.Draw);
-                        toPlayer1.writeInt(ServerMessages.Draw);
-                    }
-                    else{
-                        toPlayer2.writeInt(column);
-                        game.FigureOutWhoseTurn();
-                    }
-
-                    column = fromPlayer2.readInt();
-                    row = game.gameBoard.SetPiece(column, game.player2);
-                    game.gameBoard.PrintGameBoard(game);
-                    System.out.println(column);
-                    if(game.CheckForWin(row, column)){
-                        System.out.print("Win Player 2");
-                        toPlayer1.writeInt(ServerMessages.Win);
-                        toPlayer2.writeInt(column);
-                        toPlayer2.writeInt(ServerMessages.Win);
-                    }
-                    else if(game.CheckForDraw()){
-                        toPlayer2.writeInt(ServerMessages.Draw);
-                        toPlayer1.writeInt(ServerMessages.Draw);
-                    }
-                    else{
-                        toPlayer1.writeInt(column);
-                        game.FigureOutWhoseTurn();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+        while(true){
+            try {
+                int column = fromPlayer1.readInt();
+                int row = game.gameBoard.SetPiece(column, game.player1);
+                if(game.CheckForWin(row, column)){
+                    System.out.print("Win Player 1");
+                    toPlayer1.writeInt(ServerMessages.WinPlayer1);
+                    toPlayer2.writeInt(ServerMessages.WinPlayer1);
+                    toPlayer2.writeInt(column);
+                    break;
                 }
-            }
+                else if(game.CheckForDraw()){
+                    toPlayer1.writeInt(ServerMessages.Draw);
+                    toPlayer2.writeInt(ServerMessages.Draw);
+                    toPlayer2.writeInt(column);
+                    break;
+                }
+                else{
+                    toPlayer2.writeInt(column);
+                    game.FigureOutWhoseTurn();
+                }
 
+                column = fromPlayer2.readInt();
+                row = game.gameBoard.SetPiece(column, game.player2);
+                if(game.CheckForWin(row, column)){
+                    System.out.print("Win Player 2");
+                    toPlayer2.writeInt(ServerMessages.WinPlayer2);
+                    toPlayer1.writeInt(ServerMessages.WinPlayer2);
+                    toPlayer1.writeInt(column);
+                    break;
+                }
+                else if(game.CheckForDraw()){
+                    toPlayer2.writeInt(ServerMessages.Draw);
+                    toPlayer1.writeInt(ServerMessages.Draw);
+                    toPlayer1.writeInt(column);
+                    break;
+                }
+                else{
+                    toPlayer1.writeInt(column);
+                    game.FigureOutWhoseTurn();
+                }
+            } catch (IOException e) {
+
+            }
+        }
     }
 }
 

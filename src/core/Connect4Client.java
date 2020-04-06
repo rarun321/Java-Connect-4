@@ -11,6 +11,7 @@ import java.net.Socket;
 public class Connect4Client implements ServerMessages{
     private Connect4GUI gui;
     private String host = "localhost";
+    private Socket socket;
     private DataInputStream fromServer;
     private DataOutputStream toServer;
     public Player player;
@@ -22,14 +23,14 @@ public class Connect4Client implements ServerMessages{
 
     public void ConnectToServer(){
         try{
-            Socket socket = new Socket(host, 7000);
+            socket = new Socket(host, 7000);
             fromServer = new DataInputStream(socket.getInputStream());
             toServer = new DataOutputStream(socket.getOutputStream());
 
             int position = fromServer.readInt();
             if(position == 1){
                player = new Player("Player 1", "X", 1, true);
-               otherPlayer = new Player("Player 2", "Y", 1, false);
+               otherPlayer = new Player("Player 2", "Y", 2, false);
             }
             else{
                 player = new Player("Player 2", "Y", 2, false);
@@ -44,12 +45,20 @@ public class Connect4Client implements ServerMessages{
             while (true){
                     try {
                         int info = receiveInfoFromServer();
-                        if(info == Win){
-                            if(player.myTurn) SendWinNotification(player.playerPosition);
-                            else SendWinNotification(otherPlayer.playerPosition);
+                        if(info == WinPlayer1){
+                            SendWinNotification("Player 1 has won!");
+                            CloseSocket();
+                            break;
+                        }
+                        else if(info == WinPlayer2){
+                            SendWinNotification("Player 2 has won!");
+                            CloseSocket();
+                            break;
                         }
                         else if(info == Draw){
                             SendDrawNotification();
+                            CloseSocket();
+                            break;
                         }
                         else{
                             UpdateBoard(info);
@@ -67,15 +76,21 @@ public class Connect4Client implements ServerMessages{
         toServer.writeInt(column);
     }
 
+    private void CloseSocket() throws IOException {
+        int remainingColumn = receiveInfoFromServer();
+        UpdateBoard(remainingColumn);
+        socket.close();
+    }
+
     private void UpdateBoard(int column){
         Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
     }
 
-    private void SendWinNotification(int position){
-        Platform.runLater(()-> gui.SendAlert("Player " + position + " has won!", ButtonType.FINISH));
+    private void SendWinNotification(String message) throws IOException {
+        Platform.runLater(()-> gui.SendAlert(message, ButtonType.FINISH));
     }
 
-    private void SendDrawNotification(){
+    private void SendDrawNotification()  throws IOException{
         Platform.runLater(()-> gui.SendAlert("Draw!", ButtonType.FINISH));
     }
 
