@@ -73,27 +73,27 @@ class HandleGame implements Runnable{
             while(true){
                 try {
                     int column = fromPlayer1.readInt();
+                    int row = game.gameBoard.SetPiece(column, game.player1);
                     System.out.println(column);
-                    if(game.gameBoard.GetWhoseTurn() != game.player1){
-                        toPlayer1.writeInt(ServerMessages.Players2Turn);
+                    if(game.CheckForWin(row, column)){
+                        toPlayer1.writeInt(ServerMessages.Win);
+                        toPlayer2.writeInt(ServerMessages.Win);
                     }
                     else{
-                        toPlayer1.writeInt(ServerMessages.Valid);
                         toPlayer2.writeInt(column);
                         game.gameBoard.SetPiece(column, game.player1);
                         game.FigureOutWhoseTurn();
                     }
 
-//                    column = fromPlayer2.readInt();
-//                    if(game.gameBoard.GetWhoseTurn() != game.player2){
-//                        toPlayer2.writeInt(ServerMessages.Players1Turn);
-//                    }
-//                    else{
-//                        toPlayer2.writeInt(ServerMessages.Valid);
-//                        toPlayer1.writeInt(column);
-//                        game.gameBoard.SetPiece(column, game.player2);
-//                        game.FigureOutWhoseTurn();
-//                    }
+                    column = fromPlayer2.readInt();
+                    if(game.gameBoard.GetWhoseTurn() != game.player2){
+                        toPlayer2.writeInt(ServerMessages.Players1Turn);
+                    }
+                    else{
+                        toPlayer1.writeInt(column);
+                        game.gameBoard.SetPiece(column, game.player2);
+                        game.FigureOutWhoseTurn();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

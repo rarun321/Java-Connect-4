@@ -1,7 +1,6 @@
 package core;
 
 import javafx.application.Platform;
-import javafx.scene.control.ButtonType;
 import ui.Connect4GUI;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -44,30 +43,30 @@ public class Connect4Client implements ServerMessages{
             while (true){
                 if(player.playerPosition == 1){
                     try {
-                        int info = receiveInfoFromServer();
-                        System.out.print(info);
+                        int column = receiveInfoFromServer();
+                        UpdateBoard(column);
+                        player.myTurn = true;
+                        System.out.print(column);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 else if(player.playerPosition == 2){
                     try {
-                        int info = receiveInfoFromServer();
-                        if(info == ServerMessages.Players2Turn){
-
-                        }
-                        else{
-                            Platform.runLater(()->{
-                                gui.MakeMove(info, otherPlayer);
-                            });
-                        }
-                        System.out.print(info);
+                        int column = receiveInfoFromServer();
+                        UpdateBoard(column);
+                        player.myTurn = true;
+                        System.out.print(column);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }).start();
+    }
+
+    public void UpdateBoard(int column){
+        Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
     }
 
     public void SendColumnToServer(int column) throws IOException {

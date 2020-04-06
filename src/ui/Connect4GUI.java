@@ -25,7 +25,7 @@ import java.io.IOException;
 public class Connect4GUI extends Application implements ServerMessages {
 
     public static Connect4 game = new Connect4();
-    private final GridPane boardPane = new GridPane();
+    private static GridPane gridPane = new GridPane();
 
     public void start(Stage stage) {CreateGUIBoard(stage);}
 
@@ -50,13 +50,13 @@ public class Connect4GUI extends Application implements ServerMessages {
 
     private void CreateGUIBoard(Stage stage){
 
-        boardPane.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        gridPane.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         for(int i = 0; i < game.gameBoard.GetColumns(); i++){
             for(int e = 0; e < game.gameBoard.GetRows(); e++){
                 Rectangle rectangle = new Rectangle(100,100);
                 rectangle.setFill(Color.BLUE);
-                boardPane.add(rectangle,i,e);
+                gridPane.add(rectangle,i,e);
             }
         }
 
@@ -67,9 +67,9 @@ public class Connect4GUI extends Application implements ServerMessages {
                 circle.setStroke(Color.WHITE);
                 circle.setFill(Color.WHITE);
                 circle.setStrokeWidth(10);
-                boardPane.setVgap(7);
-                boardPane.setHgap(7);
-                boardPane.add(circle,i,e);
+                gridPane.setVgap(7);
+                gridPane.setHgap(7);
+                gridPane.add(circle,i,e);
             }
         }
 
@@ -83,10 +83,10 @@ public class Connect4GUI extends Application implements ServerMessages {
                     ex.printStackTrace();
                 }
             });
-            boardPane.add(button,i,8);
+            gridPane.add(button,i,8);
         }
 
-        Scene scene = new Scene(boardPane, 745, 700);
+        Scene scene = new Scene(gridPane, 745, 700);
         stage.setTitle("Connect 4");
         stage.setScene(scene);
         stage.setResizable(false);
@@ -96,15 +96,16 @@ public class Connect4GUI extends Application implements ServerMessages {
     private void RunGame(ActionEvent e) throws IOException {
         String buttonText = ((Button)e.getSource()).getText();
 
-        if(game.client != null && game.client.player.myTurn){
+        if(game.client.player.myTurn == false){
+            SendAlert("It's the other players turn!", ButtonType.OK);
+            return;
+        }
+
+        if(game.client.player.myTurn){
             int column = Integer.valueOf(buttonText.substring(buttonText.length() - 1)) - 1;
             MakeMove(column, game.client.player);
             game.client.SendColumnToServer(column);
             game.client.player.myTurn = false;
-            return;
-        }
-        else if(game.client.player.myTurn == false){
-            SendAlert("It's the other players turn!", ButtonType.OK);
             return;
         }
 
@@ -148,6 +149,6 @@ public class Connect4GUI extends Application implements ServerMessages {
             circle.setFill(Color.YELLOW);
         }
         circle.setStrokeWidth(10);
-        boardPane.add(circle,column,row);
+        gridPane.add(circle,column,row);
     }
 }
