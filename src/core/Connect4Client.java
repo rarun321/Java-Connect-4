@@ -4,13 +4,18 @@ import javafx.application.Platform;
 import javafx.scene.control.ButtonType;
 import ui.Connect4GUI;
 import ui.Connect4TextConsole;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Connect4Client implements ServerMessages{
+/**<p>Client class for network game</p>
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-02-23
+ * */
+
+public class Connect4Client implements IServerMessages {
     private Connect4GUI gui;
     private Connect4 game;
     private String host = "localhost";
@@ -24,10 +29,12 @@ public class Connect4Client implements ServerMessages{
     public Connect4Client(Connect4GUI gui){
         this.gui = gui;
     }
+
     public Connect4Client(Connect4 game){
         this.game = game;
     }
 
+    /**<p>Connects client to server</p>* */
     public void ConnectToServer(){
         try{
             socket = new Socket(host, 7000);
@@ -88,6 +95,9 @@ public class Connect4Client implements ServerMessages{
         }).start();
     }
 
+    /**<p>Sends column to server</p>
+     * @param column column of the piece that was the just placed in the game board
+     * */
     public void SendColumnToServer(int column) throws IOException {
         toServer.writeInt(column);
     }

@@ -4,7 +4,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Connect4Server implements ServerMessages {
+/**<p>Connect4 server for networking</p>
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-04-05
+ * */
+
+public class Connect4Server implements IServerMessages {
 
     public static void main(String[] args)
     {
@@ -38,6 +44,12 @@ public class Connect4Server implements ServerMessages {
     }
 }
 
+/**<p>Handles multiple s</p>
+ * @author Rithvik Arun
+ * @version 1.0
+ * @since 2020-04-05
+ * */
+
 class HandleGame implements Runnable{
     private Socket player1;
     private Socket player2;
@@ -70,8 +82,8 @@ class HandleGame implements Runnable{
         }
 
         try {
-            toPlayer1.writeInt(ServerMessages.greetingPlayer1);
-            toPlayer2.writeInt(ServerMessages.greetingPlayer2);
+            toPlayer1.writeInt(IServerMessages.greetingPlayer1);
+            toPlayer2.writeInt(IServerMessages.greetingPlayer2);
         } catch (IOException e) {
 
         }
@@ -81,14 +93,14 @@ class HandleGame implements Runnable{
                 int column = fromPlayer1.readInt();
                 int row = game.gameBoard.SetPiece(column, game.player1);
                 if(game.CheckForWin(row, column)){
-                    toPlayer1.writeInt(ServerMessages.WinPlayer1);
-                    toPlayer2.writeInt(ServerMessages.WinPlayer1);
+                    toPlayer1.writeInt(IServerMessages.WinPlayer1);
+                    toPlayer2.writeInt(IServerMessages.WinPlayer1);
                     toPlayer2.writeInt(column);
                     break;
                 }
                 else if(game.CheckForDraw()){
-                    toPlayer1.writeInt(ServerMessages.Draw);
-                    toPlayer2.writeInt(ServerMessages.Draw);
+                    toPlayer1.writeInt(IServerMessages.Draw);
+                    toPlayer2.writeInt(IServerMessages.Draw);
                     toPlayer2.writeInt(column);
                     break;
                 }
@@ -100,14 +112,14 @@ class HandleGame implements Runnable{
                 column = fromPlayer2.readInt();
                 row = game.gameBoard.SetPiece(column, game.player2);
                 if(game.CheckForWin(row, column)){
-                    toPlayer2.writeInt(ServerMessages.WinPlayer2);
-                    toPlayer1.writeInt(ServerMessages.WinPlayer2);
+                    toPlayer2.writeInt(IServerMessages.WinPlayer2);
+                    toPlayer1.writeInt(IServerMessages.WinPlayer2);
                     toPlayer1.writeInt(column);
                     break;
                 }
                 else if(game.CheckForDraw()){
-                    toPlayer2.writeInt(ServerMessages.Draw);
-                    toPlayer1.writeInt(ServerMessages.Draw);
+                    toPlayer2.writeInt(IServerMessages.Draw);
+                    toPlayer1.writeInt(IServerMessages.Draw);
                     toPlayer1.writeInt(column);
                     break;
                 }

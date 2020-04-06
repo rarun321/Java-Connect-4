@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Connect4GUI extends Application implements ServerMessages {
+public class Connect4GUI extends Application implements IServerMessages {
 
     public static Connect4 game = new Connect4();
     public static boolean isServerGame;
@@ -27,6 +27,11 @@ public class Connect4GUI extends Application implements ServerMessages {
 
     public void start(Stage stage) {CreateGUIBoard(stage);}
 
+    /**<p>Checks to see if the player has won the game</p>
+     * @param column column of the piece that was the just placed in the game board
+     * @param player player that is making the move
+     * @return returns thr row
+     * */
     public int MakeMove(int column, Player player){
         if(!game.CheckIfPieceEqualsEmpty(0,column)){
             SendAlert("That column is full! Choose another column!", ButtonType.OK);
@@ -37,6 +42,10 @@ public class Connect4GUI extends Application implements ServerMessages {
         return row;
     }
 
+    /**<p>Sends GUI alert</p></p>
+     * @param message message for alert
+     * @param type gui button
+     * */
     public void SendAlert(String message, ButtonType type){
         Alert alert = new Alert(Alert.AlertType.NONE, message, type);
         alert.showAndWait();
@@ -45,7 +54,6 @@ public class Connect4GUI extends Application implements ServerMessages {
     }
 
     private void CreateGUIBoard(Stage stage){
-
         gridPane.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         for(int i = 0; i < game.gameBoard.GetColumns(); i++){
@@ -88,8 +96,7 @@ public class Connect4GUI extends Application implements ServerMessages {
         stage.setResizable(false);
         stage.show();
 
-        if(isServerGame)
-            RunClientBoards();
+        if(isServerGame) RunClientBoards();
     }
 
     private void RunClientBoards(){

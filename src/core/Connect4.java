@@ -1,12 +1,11 @@
 package core;
 
-import ui.Connect4GUI;
-
 /**<p>Connect4 is used to create a new connect4 game</p>
  * @author Rithvik Arun
  * @version 1.0
  * @since 2020-02-23
  * */
+
 public class Connect4 implements IConnect4 {
     public GameBoard gameBoard;
     public Player player1;

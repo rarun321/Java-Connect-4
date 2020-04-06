@@ -2,8 +2,6 @@ package ui;
 
 import core.*;
 import javafx.application.Application;
-import javafx.scene.Scene;
-
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -68,6 +66,42 @@ public class Connect4TextConsoleTest {
             else{
                 System.out.println("Invalid input!");
                 answer = scanner.nextLine();
+            }
+        }
+    }
+
+    /**<p>Runs the client boards for text console game</p>
+     * @param client client that's turn it is
+     * @param game connect 4 game
+     * */
+    public static void RunClientBoards(Connect4Client client, Connect4 game){
+        Scanner scanner = new Scanner(System.in);
+        int column;
+        String value;
+        if(client.player.myTurn) {
+            System.out.println("Player " + client.player.playerPosition + " it's your turn! Pick a column from 1-7");
+            value = scanner.nextLine();
+            while (!value.matches("[1-7]+")) {
+                System.out.println("Invalid input! " + "Player " + client.player.playerPosition + " it's still your turn! Pick a column from 1-7");
+                value = scanner.nextLine();
+            }
+
+            column = Integer.valueOf(value);
+
+            while (!game.gameBoard.CheckIfColumnIsFull(column, game)) {
+                System.out.println("Invalid input! " + "Player " + client.player.playerPosition + " it's still your turn! Pick a column from 1-7");
+                column = scanner.nextInt();
+            }
+
+            game.gameBoard.SetPiece(column - 1, client.player);
+            game.gameBoard.PrintGameBoard(game);
+            client.player.myTurn = false;
+
+            System.out.println("Wait for Player " + client.otherPlayer.playerPosition + " to play!");
+            try {
+                client.SendColumnToServer(column - 1);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -156,37 +190,5 @@ public class Connect4TextConsoleTest {
     private static void RunConsoleGameOnline(Connect4 game){
         Connect4Client client = new Connect4Client(game);
         client.ConnectToServer();
-    }
-
-    public static void RunClientBoards(Connect4Client client, Connect4 game){
-        Scanner scanner = new Scanner(System.in);
-        int column;
-        String value;
-        if(client.player.myTurn) {
-            System.out.println("Player " + client.player.playerPosition + " it's your turn! Pick a column from 1-7");
-            value = scanner.nextLine();
-            while (!value.matches("[1-7]+")) {
-                System.out.println("Invalid input! " + "Player " + client.player.playerPosition + " it's still your turn! Pick a column from 1-7");
-                value = scanner.nextLine();
-            }
-
-            column = Integer.valueOf(value);
-
-            while (!game.gameBoard.CheckIfColumnIsFull(column, game)) {
-                System.out.println("Invalid input! " + "Player " + client.player.playerPosition + " it's still your turn! Pick a column from 1-7");
-                column = scanner.nextInt();
-            }
-
-            game.gameBoard.SetPiece(column - 1, client.player);
-            game.gameBoard.PrintGameBoard(game);
-            client.player.myTurn = false;
-
-            System.out.println("Wait for Player " + client.otherPlayer.playerPosition + " to play!");
-            try {
-                client.SendColumnToServer(column - 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
