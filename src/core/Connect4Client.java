@@ -1,6 +1,7 @@
 package core;
 
 import javafx.application.Platform;
+import javafx.scene.control.ButtonType;
 import ui.Connect4GUI;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,11 +29,11 @@ public class Connect4Client implements ServerMessages{
             int position = fromServer.readInt();
             if(position == 1){
                player = new Player("Player 1", "X", 1, true);
-               otherPlayer = new Player("Player 2", "Y");
+               otherPlayer = new Player("Player 2", "Y", 1, false);
             }
             else{
                 player = new Player("Player 2", "Y", 2, false);
-                otherPlayer = new Player("Player 1", "X");
+                otherPlayer = new Player("Player 1", "X", 1, false);
             }
         }
         catch (Exception e){
@@ -41,39 +42,44 @@ public class Connect4Client implements ServerMessages{
 
         new Thread(()->{
             while (true){
-                if(player.playerPosition == 1){
                     try {
-                        int column = receiveInfoFromServer();
-                        UpdateBoard(column);
-                        player.myTurn = true;
-                        System.out.print(column);
+                        int info = receiveInfoFromServer();
+                        if(info == Win){
+                            if(player.myTurn) SendWinNotification(player.playerPosition);
+                            else SendWinNotification(otherPlayer.playerPosition);
+                        }
+                        else if(info == Draw){
+                            SendDrawNotification();
+                        }
+                        else{
+                            UpdateBoard(info);
+                            player.myTurn = true;
+                            System.out.print(info);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-                else if(player.playerPosition == 2){
-                    try {
-                        int column = receiveInfoFromServer();
-                        UpdateBoard(column);
-                        player.myTurn = true;
-                        System.out.print(column);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }).start();
-    }
-
-    public void UpdateBoard(int column){
-        Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
     }
 
     public void SendColumnToServer(int column) throws IOException {
         toServer.writeInt(column);
     }
 
-    public int receiveInfoFromServer() throws IOException {
+    private void UpdateBoard(int column){
+        Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
+    }
+
+    private void SendWinNotification(int position){
+        Platform.runLater(()-> gui.SendAlert("Player " + position + " has won!", ButtonType.FINISH));
+    }
+
+    private void SendDrawNotification(){
+        Platform.runLater(()-> gui.SendAlert("Draw!", ButtonType.FINISH));
+    }
+
+    private int receiveInfoFromServer() throws IOException {
         int status = fromServer.readInt();
         return status;
     }

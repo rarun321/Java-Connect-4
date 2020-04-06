@@ -74,24 +74,39 @@ class HandleGame implements Runnable{
                 try {
                     int column = fromPlayer1.readInt();
                     int row = game.gameBoard.SetPiece(column, game.player1);
+                    game.gameBoard.PrintGameBoard(game);
                     System.out.println(column);
                     if(game.CheckForWin(row, column)){
+                        System.out.print("Win Player 1");
                         toPlayer1.writeInt(ServerMessages.Win);
+                        toPlayer2.writeInt(column);
                         toPlayer2.writeInt(ServerMessages.Win);
+                    }
+                    else if(game.CheckForDraw()){
+                        toPlayer2.writeInt(ServerMessages.Draw);
+                        toPlayer1.writeInt(ServerMessages.Draw);
                     }
                     else{
                         toPlayer2.writeInt(column);
-                        game.gameBoard.SetPiece(column, game.player1);
                         game.FigureOutWhoseTurn();
                     }
 
                     column = fromPlayer2.readInt();
-                    if(game.gameBoard.GetWhoseTurn() != game.player2){
-                        toPlayer2.writeInt(ServerMessages.Players1Turn);
+                    row = game.gameBoard.SetPiece(column, game.player2);
+                    game.gameBoard.PrintGameBoard(game);
+                    System.out.println(column);
+                    if(game.CheckForWin(row, column)){
+                        System.out.print("Win Player 2");
+                        toPlayer1.writeInt(ServerMessages.Win);
+                        toPlayer2.writeInt(column);
+                        toPlayer2.writeInt(ServerMessages.Win);
+                    }
+                    else if(game.CheckForDraw()){
+                        toPlayer2.writeInt(ServerMessages.Draw);
+                        toPlayer1.writeInt(ServerMessages.Draw);
                     }
                     else{
                         toPlayer1.writeInt(column);
-                        game.gameBoard.SetPiece(column, game.player2);
                         game.FigureOutWhoseTurn();
                     }
                 } catch (IOException e) {

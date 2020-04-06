@@ -96,12 +96,12 @@ public class Connect4GUI extends Application implements ServerMessages {
     private void RunGame(ActionEvent e) throws IOException {
         String buttonText = ((Button)e.getSource()).getText();
 
-        if(game.client.player.myTurn == false){
+        if(game.client != null && game.client.player.myTurn == false){
             SendAlert("It's the other players turn!", ButtonType.OK);
             return;
         }
 
-        if(game.client.player.myTurn){
+        if(game.client != null && game.client.player.myTurn){
             int column = Integer.valueOf(buttonText.substring(buttonText.length() - 1)) - 1;
             MakeMove(column, game.client.player);
             game.client.SendColumnToServer(column);
