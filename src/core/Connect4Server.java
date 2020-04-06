@@ -11,7 +11,7 @@ public class Connect4Server implements ServerMessages {
         RunAndWaitForPlayersToJoin();
     }
 
-    public static void RunAndWaitForPlayersToJoin(){
+    private static void RunAndWaitForPlayersToJoin(){
         new Thread(() -> {
             try{
                 ServerSocket serverSocket = new ServerSocket(7000);

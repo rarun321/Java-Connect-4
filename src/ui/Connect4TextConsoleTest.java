@@ -32,9 +32,31 @@ public class Connect4TextConsoleTest {
         String answer = scanner.nextLine();
         while(true){
             if(answer.toLowerCase().equals("p")){
-                CreatePlayers(scanner, game);
-                if(platform.toLowerCase().equals("t")) RunConsoleGameOnline(game);
-                else RunGUIGameLocal(game, args);
+                System.out.println("Enter ‘S’ if you are playing online (Start Server First!) ; enter ‘L’ if you are playing local.");
+                String mode = scanner.nextLine();
+                while(true){
+                    if(mode.toLowerCase().equals("s")) break;
+                    else if(mode.toLowerCase().equals("l")) break;
+                    else{
+                        System.out.println("Invalid input!");
+                        mode = scanner.nextLine();
+                    }
+                }
+                if(mode.toLowerCase().equals("s") && platform.toLowerCase().equals("t")){
+                    RunConsoleGameOnline(game);
+                }
+                else if(mode.toLowerCase().equals("s") && platform.toLowerCase().equals("g")){
+                    RunGUIGameOnline(game,args);
+                }
+                else if((mode.toLowerCase().equals("l") && platform.toLowerCase().equals("t"))){
+                    CreatePlayers(game);
+                    RunConsoleGameLocal(game,scanner);
+                }
+                else if((mode.toLowerCase().equals("l") && platform.toLowerCase().equals("g"))){
+                    CreatePlayers(game);
+                    RunGUIGameLocal(game, args);
+                }
+
                 break;
             }
             else if(answer.toLowerCase().equals("c")){
@@ -50,7 +72,7 @@ public class Connect4TextConsoleTest {
         }
     }
 
-    private static void CreatePlayers(Scanner scanner, Connect4 game){
+    private static void CreatePlayers(Connect4 game){
         game.player1 = new Player("Player 1", "X");
         game.player2 = new Player("Player 2", "Y");
     }
@@ -118,12 +140,20 @@ public class Connect4TextConsoleTest {
 
     private static void RunGUIGameLocal(Connect4 game, String[] args){
         Connect4GUI gui = new Connect4GUI();
+        game.FigureOutWhoseTurn();
         gui.game = game;
-
+        gui.isServerGame = false;
         Application.launch(Connect4GUI.class, args);
     }
 
-    private static void RunConsoleGameOnline(Connect4 game) throws IOException {
+    private static void RunGUIGameOnline(Connect4 game, String[] args){
+        Connect4GUI gui = new Connect4GUI();
+        gui.game = game;
+        gui.isServerGame = true;
+        Application.launch(Connect4GUI.class, args);
+    }
+
+    private static void RunConsoleGameOnline(Connect4 game){
         Connect4Client client = new Connect4Client(game);
         client.ConnectToServer();
     }
@@ -150,6 +180,7 @@ public class Connect4TextConsoleTest {
             game.gameBoard.SetPiece(column - 1, client.player);
             game.gameBoard.PrintGameBoard(game);
             client.player.myTurn = false;
+
             System.out.println("Wait for Player " + client.otherPlayer.playerPosition + " to play!");
             try {
                 client.SendColumnToServer(column - 1);

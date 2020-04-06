@@ -17,6 +17,7 @@ public class Connect4Client implements ServerMessages{
     private Socket socket;
     private DataInputStream fromServer;
     private DataOutputStream toServer;
+    public boolean gameover = false;
     public Player player;
     public Player otherPlayer;
 
@@ -52,36 +53,37 @@ public class Connect4Client implements ServerMessages{
 
         new Thread(()->{
             while (true){
-                    try {
-                        int info = receiveInfoFromServer();
-                        if(info == WinPlayer1){
-                            SendWinNotification("Player 1 has won!");
-                            CloseSocket();
-                            break;
-                        }
-                        else if(info == WinPlayer2){
-                            SendWinNotification("Player 2 has won!");
-                            CloseSocket();
-                            break;
-                        }
-                        else if(info == Draw){
-                            SendDrawNotification();
-                            CloseSocket();
-                            break;
-                        }
-                        else if(info == greetingPlayer1){
-                            SendNotification("Hello Player 1, you are the red coin and get to go first!");
-                            Connect4TextConsole.RunClientBoards(this, game);
-                        }
-                        else if(info == greetingPlayer2){
-                            SendNotification("Hello Player 2, you are the yellow coin and player 1 gets to go first!");
-                        }
-                        else{
-                            UpdateBoard(info);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                try {
+                    int info = receiveInfoFromServer();
+                    if(info == WinPlayer1){
+                        SendWinNotification("Player 1 has won!");
+                        CloseSocket();
+                        break;
                     }
+                    else if(info == WinPlayer2){
+                        SendWinNotification("Player 2 has won!");
+                        CloseSocket();
+                        break;
+                    }
+                    else if(info == Draw){
+                        SendDrawNotification();
+                        CloseSocket();
+                        break;
+                    }
+                    else if(info == greetingPlayer1){
+                        SendNotification("You're Player 1! You get to go first!");
+                        if(gui == null) Connect4TextConsole.RunClientBoards(this, game);
+                    }
+                    else if(info == greetingPlayer2){
+                        SendNotification("You're Player 2! Wait for Player 1 to make it's move!");
+                    }
+                    else{
+                        player.myTurn = true;
+                        UpdateBoard(info);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }
@@ -99,25 +101,27 @@ public class Connect4Client implements ServerMessages{
     private void UpdateBoard(int column){
         if(gui != null){
             Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
-            player.myTurn = true;
         } else{
             game.gameBoard.SetPiece(column, otherPlayer);
             System.out.println();
             game.gameBoard.PrintGameBoard(game);
-            player.myTurn = true;
-            Connect4TextConsole.RunClientBoards(this, game);
+            if(!gameover) Connect4TextConsole.RunClientBoards(this, game);
         }
     }
 
     private void SendWinNotification(String message) throws IOException {
+        gameover = true;
+
         if(gui != null){
             Platform.runLater(()-> gui.SendAlert(message, ButtonType.FINISH));
-        }else{
+        } else{
             System.out.println(message);
         }
     }
 
     private void SendDrawNotification()  throws IOException{
+        gameover = true;
+
         if(gui != null){
             Platform.runLater(()-> gui.SendAlert("Draw!", ButtonType.FINISH));
         }else{

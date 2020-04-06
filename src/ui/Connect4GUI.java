@@ -22,11 +22,10 @@ import java.io.IOException;
 public class Connect4GUI extends Application implements ServerMessages {
 
     public static Connect4 game = new Connect4();
+    public static boolean isServerGame;
     private static GridPane gridPane = new GridPane();
 
     public void start(Stage stage) {CreateGUIBoard(stage);}
-
-    public Connect4GUI(){}
 
     public int MakeMove(int column, Player player){
         if(!game.CheckIfPieceEqualsEmpty(0,column)){
@@ -89,7 +88,8 @@ public class Connect4GUI extends Application implements ServerMessages {
         stage.setResizable(false);
         stage.show();
 
-        RunClientBoards();
+        if(isServerGame)
+            RunClientBoards();
     }
 
     private void RunClientBoards(){
