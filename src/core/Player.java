@@ -10,8 +10,12 @@ public class Player implements IPlayer {
     private String playerName;
     private String playerToken;
 
-    public Player(){ }
+    public int playerPosition = 0;
+    public boolean myTurn = false;
+
+    public Player(){}
     public Player(String playerName, String playerToken){ this.playerName = playerName; this.playerToken = playerToken;}
+    public Player(String playerName, String playerToken, int playerPosition, boolean myTurn ){ this.playerName = playerName; this.playerToken = playerToken; this.playerPosition = playerPosition; this.myTurn = myTurn;}
 
     /**<p>Gets player  name</p>
      * @return player name

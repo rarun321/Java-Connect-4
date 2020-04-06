@@ -11,7 +11,7 @@ import java.util.Scanner;
  * @since 2020-02-23
  * */
 
-public class Connect4TextConsole {
+public class Connect4TextConsoleTest {
     public static void main(String[] args)
     {
         Connect4 game = new Connect4();
@@ -79,7 +79,6 @@ public class Connect4TextConsole {
 
         while (true){
             game.FigureOutWhoseTurn();
-
             if(game.gameBoard.GetWhoseTurn().GetName() != "Bot"){
                 System.out.println(game.gameBoard.GetWhoseTurn().GetName() + " it's your turn! Pick a column from 1-7");
                 value = scanner.nextLine();
@@ -121,7 +120,6 @@ public class Connect4TextConsole {
 
         game.client = new Connect4Client(gui);
         game.client.ConnectToServer();
-        game.FigureOutWhoseTurn();
 
         Application.launch(Connect4GUI.class, args);
     }

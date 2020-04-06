@@ -2,6 +2,7 @@ package ui;
 
 import core.Connect4;
 import core.Connect4ComputerPlayer;
+import core.Player;
 import core.ServerMessages;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -21,26 +22,30 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Connect4GUI extends Application {
+public class Connect4GUI extends Application implements ServerMessages {
 
     public static Connect4 game = new Connect4();
     private final GridPane boardPane = new GridPane();
 
     public void start(Stage stage) {CreateGUIBoard(stage);}
 
-    private void FillPiece(int row, int column){
-        Circle circle = new Circle(300,0,45);
-        circle.centerXProperty();
-        if(game.gameBoard.GetWhoseTurn() == game.player1){
-            circle.setStroke(Color.RED);
-            circle.setFill(Color.RED);
+    public Connect4GUI(){};
+
+    public int MakeMove(int column, Player player){
+        if(!game.CheckIfPieceEqualsEmpty(0,column)){
+            SendAlert("That column is full! Choose another column!", ButtonType.OK);
+            return 0;
         }
-        else{
-            circle.setStroke(Color.YELLOW);
-            circle.setFill(Color.YELLOW);
-        }
-        circle.setStrokeWidth(10);
-        boardPane.add(circle, column,row);
+        int row = game.gameBoard.SetPiece(column, player);
+        FillPiece(row,column,player);
+        return row;
+    }
+
+    public void SendAlert(String message, ButtonType type){
+        Alert alert = new Alert(Alert.AlertType.NONE, message, type);
+        alert.showAndWait();
+
+        if(alert.getResult() == ButtonType.FINISH) System.exit(0);
     }
 
     private void CreateGUIBoard(Stage stage){
@@ -91,20 +96,15 @@ public class Connect4GUI extends Application {
     private void RunGame(ActionEvent e) throws IOException {
         String buttonText = ((Button)e.getSource()).getText();
 
-        if(game.client != null) {
-            int column = Integer.valueOf(buttonText.substring(buttonText.length() - 1));
-            String message = game.client.SendColumnToServer(column);
-            if(message.equals(ServerMessages.Valid.toString())){
-                column -= 1;
-                int row = game.gameBoard.SetPiece(column ,game.gameBoard.GetWhoseTurn());
-                FillPiece(row,column);
-            }
-            else if(message.equals(ServerMessages.ColumnFull.toString())){
-                SendAlert("That column is full! Choose another column!", ButtonType.OK);
-            }
-            else if(message.equals(ServerMessages.Players2Turn.toString())){
-                SendAlert("It is player 2's turn!", ButtonType.OK);
-            }
+        if(game.client != null && game.client.player.myTurn){
+            int column = Integer.valueOf(buttonText.substring(buttonText.length() - 1)) - 1;
+            MakeMove(column, game.client.player);
+            game.client.SendColumnToServer(column);
+            game.client.player.myTurn = false;
+            return;
+        }
+        else if(game.client.player.myTurn == false){
+            SendAlert("It's the other players turn!", ButtonType.OK);
             return;
         }
 
@@ -123,28 +123,31 @@ public class Connect4GUI extends Application {
         if(bot){
             int botColumn = ((Connect4ComputerPlayer)game.player2).MakeMove(game) - 1;
             int botRow = game.gameBoard.SetPiece(botColumn, game.gameBoard.GetWhoseTurn());
-            FillPiece(botRow,botColumn);
+            FillPiece(botRow,botColumn, game.gameBoard.GetWhoseTurn());
             if(game.CheckForWin(botRow,botColumn)) SendAlert(game.gameBoard.GetWhoseTurn().GetName() + " wins!!", ButtonType.FINISH);
             if(game.CheckForDraw()) SendAlert("Draw!", ButtonType.FINISH);
             game.FigureOutWhoseTurn();
         }
         else{
-            if(!game.CheckIfPieceEqualsEmpty(0,column)){
-                SendAlert("That column is full! Choose another column!", ButtonType.OK);
-                return;
-            }
-            int row = game.gameBoard.SetPiece(column,game.gameBoard.GetWhoseTurn());
-            FillPiece(row,column);
+            int row = MakeMove(column, game.gameBoard.GetWhoseTurn());
             if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName()+ " wins!!", ButtonType.FINISH);
             if(game.CheckForDraw()) SendAlert("Draw!", ButtonType.FINISH);
             game.FigureOutWhoseTurn();
         }
     }
 
-    private void SendAlert(String message, ButtonType type){
-        Alert alert = new Alert(Alert.AlertType.NONE, message, type);
-        alert.showAndWait();
-
-        if(alert.getResult() == ButtonType.FINISH) System.exit(0);
+    private void FillPiece(int row, int column, Player player){
+        Circle circle = new Circle(300,0,45);
+        circle.centerXProperty();
+        if(player.GetName().equals("Player 1")){
+            circle.setStroke(Color.RED);
+            circle.setFill(Color.RED);
+        }
+        else{
+            circle.setStroke(Color.YELLOW);
+            circle.setFill(Color.YELLOW);
+        }
+        circle.setStrokeWidth(10);
+        boardPane.add(circle,column,row);
     }
 }

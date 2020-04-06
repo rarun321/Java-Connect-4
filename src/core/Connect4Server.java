@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Connect4Server {
+public class Connect4Server implements ServerMessages {
 
     public static void main(String[] args)
     {
@@ -19,12 +19,17 @@ public class Connect4Server {
                     System.out.println("Waiting for player 1 to join");
                     Socket player1 = serverSocket.accept();
                     System.out.println("Player 1 has joined");
+                    new DataOutputStream(
+                            player1.getOutputStream()).writeInt(1);
 
-//                    System.out.println("Waiting for player 2 to join");
-//                    Socket player2 = serverSocket.accept();
-//                    System.out.println("Player 2 has joined");
 
-                    new Thread(new HandleGame(player1)).start();
+                    System.out.println("Waiting for player 2 to join");
+                    Socket player2 = serverSocket.accept();
+                    System.out.println("Player 2 has joined");
+                    new DataOutputStream(
+                            player2.getOutputStream()).writeInt(2);
+
+                    new Thread(new HandleGame(player1, player2)).start();
                 }
             }
             catch(Exception e){
@@ -43,15 +48,15 @@ class HandleGame implements Runnable{
     private DataOutputStream toPlayer2;
     private Connect4 game;
 
-    public HandleGame(Socket player1){
+    public HandleGame(Socket player1, Socket player2){
         this.player1 = player1;
-        //this.player2 = player2;
+        this.player2 = player2;
 
         Connect4 game = new Connect4();
         game.player1 = new Player("Player 1", "X");
+        game.player2 = new Player("Player 2", "Y");
         game.FigureOutWhoseTurn();
         this.game = game;
-        //game.player2 = new Player("Player 2", "Y");
     }
 
     @Override
@@ -59,32 +64,41 @@ class HandleGame implements Runnable{
         try{
             fromPlayer1 = new DataInputStream(player1.getInputStream());
             toPlayer1 = new DataOutputStream(player1.getOutputStream());
-//            fromPlayer2 = new DataInputStream(player2.getInputStream());
-//            toPlayer2 = new DataOutputStream(player2.getOutputStream());
-        }catch(Exception e){
+            fromPlayer2 = new DataInputStream(player2.getInputStream());
+            toPlayer2 = new DataOutputStream(player2.getOutputStream());
+        } catch(Exception e){
             System.out.println("Error in run (Handle Class): " + e.getMessage());
         }
 
-        while(true){
-            try {
-                int column = fromPlayer1.readInt();
-                if(game.gameBoard.GetWhoseTurn() != game.player1){
-                    toPlayer1.writeUTF(ServerMessages.Players2Turn.toString());
-                }
-                else if(game.gameBoard.CheckIfColumnIsFull(column, game) == false){
-                    toPlayer1.writeUTF(ServerMessages.ColumnFull.toString());
-                }
-                
-                else{
-                    toPlayer1.writeUTF(ServerMessages.Valid.toString());
-                    game.gameBoard.SetPiece(column, game.player1);
-                    game.FigureOutWhoseTurn();
-                }
+            while(true){
+                try {
+                    int column = fromPlayer1.readInt();
+                    System.out.println(column);
+                    if(game.gameBoard.GetWhoseTurn() != game.player1){
+                        toPlayer1.writeInt(ServerMessages.Players2Turn);
+                    }
+                    else{
+                        toPlayer1.writeInt(ServerMessages.Valid);
+                        toPlayer2.writeInt(column);
+                        game.gameBoard.SetPiece(column, game.player1);
+                        game.FigureOutWhoseTurn();
+                    }
 
-            } catch (IOException e) {
-                e.printStackTrace();
+//                    column = fromPlayer2.readInt();
+//                    if(game.gameBoard.GetWhoseTurn() != game.player2){
+//                        toPlayer2.writeInt(ServerMessages.Players1Turn);
+//                    }
+//                    else{
+//                        toPlayer2.writeInt(ServerMessages.Valid);
+//                        toPlayer1.writeInt(column);
+//                        game.gameBoard.SetPiece(column, game.player2);
+//                        game.FigureOutWhoseTurn();
+//                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+
     }
 }
 
