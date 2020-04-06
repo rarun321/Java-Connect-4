@@ -2,7 +2,9 @@ package ui;
 
 import core.*;
 import javafx.application.Application;
+import javafx.scene.Scene;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**<p>Text UI for the connect 4 game</p>*
@@ -12,8 +14,7 @@ import java.util.Scanner;
  * */
 
 public class Connect4TextConsole {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws IOException {
         Connect4 game = new Connect4();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter ‘T’ if you want to play using a text console; enter ‘G’ to play using a gui.");
@@ -32,7 +33,7 @@ public class Connect4TextConsole {
         while(true){
             if(answer.toLowerCase().equals("p")){
                 CreatePlayers(scanner, game);
-                if(platform.toLowerCase().equals("t")) RunConsoleGameLocal(game,scanner);
+                if(platform.toLowerCase().equals("t")) RunConsoleGameOnline(game);
                 else RunGUIGameLocal(game, args);
                 break;
             }
@@ -119,10 +120,42 @@ public class Connect4TextConsole {
         Connect4GUI gui = new Connect4GUI();
         gui.game = game;
 
-        game.client = new Connect4Client(gui);
-        game.client.ConnectToServer();
-        game.FigureOutWhoseTurn();
-
         Application.launch(Connect4GUI.class, args);
+    }
+
+    private static void RunConsoleGameOnline(Connect4 game) throws IOException {
+        Connect4Client client = new Connect4Client(game);
+        client.ConnectToServer();
+    }
+
+    public static void RunClientBoards(Connect4Client client, Connect4 game){
+        Scanner scanner = new Scanner(System.in);
+        int column;
+        String value;
+        if(client.player.myTurn) {
+            System.out.println("Player " + client.player.playerPosition + " it's your turn! Pick a column from 1-7");
+            value = scanner.nextLine();
+            while (!value.matches("[1-7]+")) {
+                System.out.println("Invalid input! " + "Player " + client.player.playerPosition + " it's still your turn! Pick a column from 1-7");
+                value = scanner.nextLine();
+            }
+
+            column = Integer.valueOf(value);
+
+            while (!game.gameBoard.CheckIfColumnIsFull(column, game)) {
+                System.out.println("Invalid input! " + "Player " + client.player.playerPosition + " it's still your turn! Pick a column from 1-7");
+                column = scanner.nextInt();
+            }
+
+            game.gameBoard.SetPiece(column - 1, client.player);
+            game.gameBoard.PrintGameBoard(game);
+            client.player.myTurn = false;
+            System.out.println();
+            try {
+                client.SendColumnToServer(column - 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

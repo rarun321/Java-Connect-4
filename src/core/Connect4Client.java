@@ -3,6 +3,8 @@ package core;
 import javafx.application.Platform;
 import javafx.scene.control.ButtonType;
 import ui.Connect4GUI;
+import ui.Connect4TextConsole;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.net.Socket;
 
 public class Connect4Client implements ServerMessages{
     private Connect4GUI gui;
+    private Connect4 game;
     private String host = "localhost";
     private Socket socket;
     private DataInputStream fromServer;
@@ -20,6 +23,9 @@ public class Connect4Client implements ServerMessages{
     public Connect4Client(Connect4GUI gui){
         this.gui = gui;
     }
+    public Connect4Client(Connect4 game){
+        this.game = game;
+    }
 
     public void ConnectToServer(){
         try{
@@ -28,9 +34,12 @@ public class Connect4Client implements ServerMessages{
             toServer = new DataOutputStream(socket.getOutputStream());
 
             int position = fromServer.readInt();
+
             if(position == 1){
                player = new Player("Player 1", "X", 1, true);
                otherPlayer = new Player("Player 2", "Y", 2, false);
+               System.out.println("Game will start soon, just waiting on another player");
+               fromServer.readInt();
             }
             else{
                 player = new Player("Player 2", "Y", 2, false);
@@ -60,10 +69,15 @@ public class Connect4Client implements ServerMessages{
                             CloseSocket();
                             break;
                         }
+                        else if(info == greetingPlayer1){
+                            SendNotification("Hello Player 1, you are the red coin and get to go first!");
+                            Connect4TextConsole.RunClientBoards(this, game);
+                        }
+                        else if(info == greetingPlayer2){
+                            SendNotification("Hello Player 2, you are the yellow coin and player 1 gets to go first!");
+                        }
                         else{
                             UpdateBoard(info);
-                            player.myTurn = true;
-                            System.out.print(info);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -83,15 +97,40 @@ public class Connect4Client implements ServerMessages{
     }
 
     private void UpdateBoard(int column){
-        Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
+        if(gui != null){
+            Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
+            player.myTurn = true;
+        } else{
+            game.gameBoard.SetPiece(column, otherPlayer);
+            System.out.println();
+            game.gameBoard.PrintGameBoard(game);
+            player.myTurn = true;
+            Connect4TextConsole.RunClientBoards(this, game);
+        }
     }
 
     private void SendWinNotification(String message) throws IOException {
-        Platform.runLater(()-> gui.SendAlert(message, ButtonType.FINISH));
+        if(gui != null){
+            Platform.runLater(()-> gui.SendAlert(message, ButtonType.FINISH));
+        }else{
+            System.out.println(message);
+        }
     }
 
     private void SendDrawNotification()  throws IOException{
-        Platform.runLater(()-> gui.SendAlert("Draw!", ButtonType.FINISH));
+        if(gui != null){
+            Platform.runLater(()-> gui.SendAlert("Draw!", ButtonType.FINISH));
+        }else{
+            System.out.println("Draw");
+        }
+    }
+
+    private void SendNotification(String message) throws IOException{
+        if(gui != null){
+            Platform.runLater(()-> gui.SendAlert(message, ButtonType.OK));
+        } else{
+            System.out.println(message);
+        }
     }
 
     private int receiveInfoFromServer() throws IOException {

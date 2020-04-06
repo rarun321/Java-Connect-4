@@ -1,9 +1,6 @@
 package ui;
 
-import core.Connect4;
-import core.Connect4ComputerPlayer;
-import core.Player;
-import core.ServerMessages;
+import core.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -29,12 +26,12 @@ public class Connect4GUI extends Application implements ServerMessages {
 
     public void start(Stage stage) {CreateGUIBoard(stage);}
 
-    public Connect4GUI(){};
+    public Connect4GUI(){}
 
     public int MakeMove(int column, Player player){
         if(!game.CheckIfPieceEqualsEmpty(0,column)){
             SendAlert("That column is full! Choose another column!", ButtonType.OK);
-            return 0;
+            return -1;
         }
         int row = game.gameBoard.SetPiece(column, player);
         FillPiece(row,column,player);
@@ -86,11 +83,18 @@ public class Connect4GUI extends Application implements ServerMessages {
             gridPane.add(button,i,8);
         }
 
-        Scene scene = new Scene(gridPane, 745, 700);
+        Scene scene = new Scene(gridPane, 745, 725);
         stage.setTitle("Connect 4");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+
+        RunClientBoards();
+    }
+
+    private void RunClientBoards(){
+        game.client = new Connect4Client(this);
+        game.client.ConnectToServer();
     }
 
     private void RunGame(ActionEvent e) throws IOException {
@@ -103,9 +107,10 @@ public class Connect4GUI extends Application implements ServerMessages {
 
         if(game.client != null && game.client.player.myTurn){
             int column = Integer.valueOf(buttonText.substring(buttonText.length() - 1)) - 1;
-            MakeMove(column, game.client.player);
-            game.client.SendColumnToServer(column);
-            game.client.player.myTurn = false;
+            if(MakeMove(column, game.client.player) != -1){
+                game.client.SendColumnToServer(column);
+                game.client.player.myTurn = false;
+            }
             return;
         }
 
@@ -131,9 +136,11 @@ public class Connect4GUI extends Application implements ServerMessages {
         }
         else{
             int row = MakeMove(column, game.gameBoard.GetWhoseTurn());
-            if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName()+ " wins!!", ButtonType.FINISH);
-            if(game.CheckForDraw()) SendAlert("Draw!", ButtonType.FINISH);
-            game.FigureOutWhoseTurn();
+            if(row != - 1){
+                if(game.CheckForWin(row,column)) SendAlert(game.gameBoard.GetWhoseTurn().GetName()+ " wins!!", ButtonType.FINISH);
+                if(game.CheckForDraw()) SendAlert("Draw!", ButtonType.FINISH);
+                game.FigureOutWhoseTurn();
+            }
         }
     }
 

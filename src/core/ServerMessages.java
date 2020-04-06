@@ -1,7 +1,9 @@
 package core;
 
 public interface ServerMessages {
-    final int WinPlayer1 = 10;
-    final int WinPlayer2 = 11;
-    final int Draw = 12;
+     int greetingPlayer1 = 9;
+     int greetingPlayer2 = 10;
+     int WinPlayer1 = 11;
+     int WinPlayer2 = 12;
+     int Draw = 13;
 }

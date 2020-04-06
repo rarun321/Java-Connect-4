@@ -19,15 +19,14 @@ public class Connect4Server implements ServerMessages {
                     System.out.println("Waiting for player 1 to join");
                     Socket player1 = serverSocket.accept();
                     System.out.println("Player 1 has joined");
-                    new DataOutputStream(
-                            player1.getOutputStream()).writeInt(1);
-
+                    new DataOutputStream(player1.getOutputStream()).writeInt(1);
 
                     System.out.println("Waiting for player 2 to join");
                     Socket player2 = serverSocket.accept();
                     System.out.println("Player 2 has joined");
-                    new DataOutputStream(
-                            player2.getOutputStream()).writeInt(2);
+
+                    new DataOutputStream(player2.getOutputStream()).writeInt(2);
+                    new DataOutputStream(player1.getOutputStream()).writeInt(2);
 
                     new Thread(new HandleGame(player1, player2)).start();
                 }
@@ -70,12 +69,18 @@ class HandleGame implements Runnable{
             System.out.println("Error in run (Handle Class): " + e.getMessage());
         }
 
+        try {
+            toPlayer1.writeInt(ServerMessages.greetingPlayer1);
+            toPlayer2.writeInt(ServerMessages.greetingPlayer2);
+        } catch (IOException e) {
+
+        }
+
         while(true){
             try {
                 int column = fromPlayer1.readInt();
                 int row = game.gameBoard.SetPiece(column, game.player1);
                 if(game.CheckForWin(row, column)){
-                    System.out.print("Win Player 1");
                     toPlayer1.writeInt(ServerMessages.WinPlayer1);
                     toPlayer2.writeInt(ServerMessages.WinPlayer1);
                     toPlayer2.writeInt(column);
@@ -95,7 +100,6 @@ class HandleGame implements Runnable{
                 column = fromPlayer2.readInt();
                 row = game.gameBoard.SetPiece(column, game.player2);
                 if(game.CheckForWin(row, column)){
-                    System.out.print("Win Player 2");
                     toPlayer2.writeInt(ServerMessages.WinPlayer2);
                     toPlayer1.writeInt(ServerMessages.WinPlayer2);
                     toPlayer1.writeInt(column);
