@@ -65,7 +65,10 @@ public class GameBoard implements IGameBoard {
         }
     }
 
-    /**<p>Removes piece from board</p>* */
+    /**<p>Gets the player whose turn it is currently</p>
+     * @param row row of piece
+     * @param column column of piece
+     * */
     public void RemovePiece(int row, int column){
         if(column == 6) gameBoard[row][column] = "| |";
         else gameBoard[row][column] = "| ";

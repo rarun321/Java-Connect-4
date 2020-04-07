@@ -42,7 +42,7 @@ public class Connect4GUI extends Application implements IServerMessages {
         return row;
     }
 
-    /**<p>Sends GUI alert</p></p>
+    /**<p>Sends GUI alert</p>
      * @param message message for alert
      * @param type gui button
      * */

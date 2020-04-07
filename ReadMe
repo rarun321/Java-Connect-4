@@ -6,4 +6,6 @@ into the future to predict the players next move.
 Project Deliverable 5 Run Instructions:
 Game is Cross Platform, you can run a console game and gui game together in the network. If you want to use the network feature make sure to RUN SERVER FIRST.
 After that you can run the game in CONNECT4TEXTCONSOLE and choose your settings. There is a CONNECT4TESTCONSOLETEST in UI folder (same exact thing as other Connect4TextConsole). You can use this to test the network game or open up another instance from the terminal.
+GUI only launches when both clients connect
 Game includes GUI network, GUI local (with player and with computer) & Text Console network, Text Console local (with player and with computer)
+

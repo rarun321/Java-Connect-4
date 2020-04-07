@@ -14,6 +14,7 @@ public class ComputerDifficulty {
     /**<p>Easy computer bot</p>
      * @param game connect4 game
      * @param depth depth of recursive call
+     * @param index current index
      * @param score initial score
      * @param max initial max
      * @return column
@@ -42,6 +43,7 @@ public class ComputerDifficulty {
     /**<p>Medium computer bot</p>
      * @param game connect4 game
      * @param depth depth of recursive call
+     * @param index current index
      * @param score initial score
      * @param max initial max
      * @return column
@@ -72,6 +74,7 @@ public class ComputerDifficulty {
     /**<p>Hard computer bot</p>
      * @param game connect4 game
      * @param depth depth of recursive call
+     * @param index current index
      * @param score initial score
      * @param max initial max
      * @return column

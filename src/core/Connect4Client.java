@@ -97,6 +97,7 @@ public class Connect4Client implements IServerMessages {
 
     /**<p>Sends column to server</p>
      * @param column column of the piece that was the just placed in the game board
+     * @throws IOException
      * */
     public void SendColumnToServer(int column) throws IOException {
         toServer.writeInt(column);

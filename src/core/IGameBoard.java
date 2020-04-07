@@ -44,6 +44,7 @@ public interface IGameBoard {
     /**<p>Checks if the column the user entered is valid</p>*
      * @param column column that the user entered
      * @param game connect 4 game object
+     * @return true or false
      * */
     boolean CheckIfColumnIsFull(int column, Connect4 game);
 }
