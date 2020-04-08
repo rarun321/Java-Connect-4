@@ -22,17 +22,13 @@ public class Connect4Client implements IServerMessages {
     private Socket socket;
     private DataInputStream fromServer;
     private DataOutputStream toServer;
-    public boolean gameover = false;
+    public boolean gameOver = false;
     public Player player;
     public Player otherPlayer;
 
-    public Connect4Client(Connect4GUI gui){
-        this.gui = gui;
-    }
+    public Connect4Client(Connect4GUI gui){ this.gui = gui;}
 
-    public Connect4Client(Connect4 game){
-        this.game = game;
-    }
+    public Connect4Client(Connect4 game){ this.game = game;}
 
     /**<p>Connects client to server</p>* */
     public void ConnectToServer(){
@@ -63,16 +59,19 @@ public class Connect4Client implements IServerMessages {
                 try {
                     int info = receiveInfoFromServer();
                     if(info == WinPlayer1){
+                        if(player.playerPosition != 1) UpdateRemaining();
                         SendWinNotification("Player 1 has won!");
                         CloseSocket();
                         break;
                     }
                     else if(info == WinPlayer2){
+                        if(player.playerPosition != 2) UpdateRemaining();
                         SendWinNotification("Player 2 has won!");
                         CloseSocket();
                         break;
                     }
                     else if(info == Draw){
+                        if(player.playerPosition != 1) UpdateRemaining();
                         SendDrawNotification();
                         CloseSocket();
                         break;
@@ -104,8 +103,6 @@ public class Connect4Client implements IServerMessages {
     }
 
     private void CloseSocket() throws IOException {
-        int remainingColumn = receiveInfoFromServer();
-        UpdateBoard(remainingColumn);
         socket.close();
     }
 
@@ -116,12 +113,17 @@ public class Connect4Client implements IServerMessages {
             game.gameBoard.SetPiece(column, otherPlayer);
             System.out.println();
             game.gameBoard.PrintGameBoard(game);
-            if(!gameover) Connect4TextConsole.RunClientBoards(this, game);
+            if(!gameOver) Connect4TextConsole.RunClientBoards(this, game);
         }
     }
 
+    private void UpdateRemaining() throws IOException{
+        int remainingColumn = receiveInfoFromServer();
+        UpdateBoard(remainingColumn);
+    }
+
     private void SendWinNotification(String message) throws IOException {
-        gameover = true;
+        gameOver = true;
 
         if(gui != null){
             Platform.runLater(()-> gui.SendAlert(message, ButtonType.FINISH));
@@ -131,7 +133,7 @@ public class Connect4Client implements IServerMessages {
     }
 
     private void SendDrawNotification()  throws IOException{
-        gameover = true;
+        gameOver = true;
 
         if(gui != null){
             Platform.runLater(()-> gui.SendAlert("Draw!", ButtonType.FINISH));

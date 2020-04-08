@@ -48,7 +48,7 @@ public class Connect4GUI extends Application implements IServerMessages {
      * */
     public void SendAlert(String message, ButtonType type){
         Alert alert = new Alert(Alert.AlertType.NONE, message, type);
-        alert.showAndWait();
+        alert.show();
 
         if(alert.getResult() == ButtonType.FINISH) System.exit(0);
     }
@@ -106,6 +106,11 @@ public class Connect4GUI extends Application implements IServerMessages {
 
     private void RunGame(ActionEvent e) throws IOException {
         String buttonText = ((Button)e.getSource()).getText();
+
+        if(game.client != null && game.client.gameOver){
+            SendAlert("Game is over!", ButtonType.OK);
+            return;
+        }
 
         if(game.client != null && game.client.player.myTurn == false){
             SendAlert("It's the other players turn!", ButtonType.OK);
