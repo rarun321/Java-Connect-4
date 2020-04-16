@@ -29,7 +29,7 @@ public class ComputerDifficulty {
                     + Win(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
-            Hard(game, depth + 1, index, score, max);
+            Easy(game, depth + 1, index, score, max);
             game.gameBoard.RemovePiece(row, i);
             if (score > max) {
                 max = score;
@@ -60,7 +60,7 @@ public class ComputerDifficulty {
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
                     + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
-            Hard(game, depth + 1, index, score, max);
+            Medium(game, depth + 1, index, score, max);
             game.gameBoard.RemovePiece(row, i);
             if (score > max) {
                 max = score;
