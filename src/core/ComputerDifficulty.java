@@ -15,21 +15,20 @@ public class ComputerDifficulty {
      * @param game connect4 game
      * @param depth depth of recursive call
      * @param index current index
-     * @param score initial score
      * @param max initial max
      * @return column
      * */
-    public int Easy(Connect4 game, int depth, int index, int score, int max) {
+    public int Easy(Connect4 game, int depth, int index, int max) {
         if(depth == 2) return index + 1;
 
         for (Object obj : AIUtil(game)) {
             int i = (int)obj;
-            score = CheckCenterColumn(i)
+            int score = CheckCenterColumn(i)
                     + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + Win(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
-            Easy(game, depth + 1, index, score, max);
+            Easy(game, depth + 1, index, max);
             game.gameBoard.RemovePiece(row, i);
             if (score > max) {
                 max = score;
@@ -44,23 +43,22 @@ public class ComputerDifficulty {
      * @param game connect4 game
      * @param depth depth of recursive call
      * @param index current index
-     * @param score initial score
      * @param max initial max
      * @return column
      * */
-    public int Medium(Connect4 game, int depth, int index, int score, int max){
+    public int Medium(Connect4 game, int depth, int index, int max){
         if(depth == 5) return index + 1;
 
         for (Object obj : AIUtil(game)) {
             int i = (int)obj;
-            score = CheckCenterColumn(i)
+            int score = CheckCenterColumn(i)
                     + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + Win(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
                     + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
-            Medium(game, depth + 1, index, score, max);
+            Medium(game, depth + 1, index, max);
             game.gameBoard.RemovePiece(row, i);
             if (score > max) {
                 max = score;
@@ -75,24 +73,23 @@ public class ComputerDifficulty {
      * @param game connect4 game
      * @param depth depth of recursive call
      * @param index current index
-     * @param score initial score
      * @param max initial max
      * @return column
      * */
-    public int Hard(Connect4 game, int depth, int index, int score, int max){
+    public int Hard(Connect4 game, int depth, int index, int max){
 
         if(depth == 7) return index + 1;
 
         for (Object obj : AIUtil(game)) {
             int i = (int)obj;
-            score = CheckCenterColumn(i)
+            int score = CheckCenterColumn(i)
                     + CheckLinesOfTwo(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + CheckLinesThree(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player2)
                     + Win(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i)
                     + CheckLinesTwoOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1)
                     + CheckLinesThreeOpp(game, 5 - game.GetNumberOfPiecesInGivenColumn(i + 1), i, game.player1);
             int row = game.gameBoard.SetPiece(i, game.player1);
-            Hard(game, depth + 1, index, score, max);
+            Hard(game, depth + 1, index, max);
             game.gameBoard.RemovePiece(row, i);
             if (score > max) {
                 max = score;

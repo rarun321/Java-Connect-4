@@ -21,9 +21,9 @@ public class Connect4ComputerPlayer extends Player implements IConnect4ComputerP
      * */
     @Override
     public int MakeMove(Connect4 game) {
-        if(difficultyLevel.equals("e")) return difficulty.Easy(game,0,0,0,0);
-        if(difficultyLevel.equals("m")) return difficulty.Medium(game,0,0,0,0);
-        if(difficultyLevel.equals("h")) return difficulty.Hard(game,0,0,0,0);
+        if(difficultyLevel.equals("e")) return difficulty.Easy(game,0,0, 0);
+        if(difficultyLevel.equals("m")) return difficulty.Medium(game,0,0, 0);
+        if(difficultyLevel.equals("h")) return difficulty.Hard(game,0,0, 0);
 
         return 0;
     }

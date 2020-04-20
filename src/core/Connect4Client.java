@@ -88,7 +88,7 @@ public class Connect4Client implements IServerMessages {
                         UpdateBoard(info);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+
                 }
             }
         }).start();
@@ -106,6 +106,26 @@ public class Connect4Client implements IServerMessages {
         socket.close();
     }
 
+    private void UpdateRemaining() throws IOException{
+        int remainingColumn = receiveInfoFromServer();
+        UpdateBoard(remainingColumn);
+    }
+
+    private void SendWinNotification(String message) {
+        gameOver = true;
+
+        if(gui != null){
+            Platform.runLater(()-> gui.SendAlert(message, ButtonType.FINISH));
+        } else{
+            System.out.println(message);
+        }
+    }
+
+    private int receiveInfoFromServer() throws IOException {
+        int status = fromServer.readInt();
+        return status;
+    }
+
     private void UpdateBoard(int column){
         if(gui != null){
             Platform.runLater(()-> gui.MakeMove(column, otherPlayer));
@@ -117,41 +137,21 @@ public class Connect4Client implements IServerMessages {
         }
     }
 
-    private void UpdateRemaining() throws IOException{
-        int remainingColumn = receiveInfoFromServer();
-        UpdateBoard(remainingColumn);
-    }
-
-    private void SendWinNotification(String message) throws IOException {
-        gameOver = true;
-
-        if(gui != null){
-            Platform.runLater(()-> gui.SendAlert(message, ButtonType.FINISH));
-        } else{
-            System.out.println(message);
-        }
-    }
-
-    private void SendDrawNotification()  throws IOException{
+    private void SendDrawNotification(){
         gameOver = true;
 
         if(gui != null){
             Platform.runLater(()-> gui.SendAlert("Draw!", ButtonType.FINISH));
-        }else{
+        } else{
             System.out.println("Draw");
         }
     }
 
-    private void SendNotification(String message) throws IOException{
+    private void SendNotification(String message){
         if(gui != null){
             Platform.runLater(()-> gui.SendAlert(message, ButtonType.OK));
         } else{
             System.out.println(message);
         }
-    }
-
-    private int receiveInfoFromServer() throws IOException {
-        int status = fromServer.readInt();
-        return status;
     }
 }
