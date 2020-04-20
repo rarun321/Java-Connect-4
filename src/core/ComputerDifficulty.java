@@ -49,7 +49,7 @@ public class ComputerDifficulty {
      * @return column
      * */
     public int Medium(Connect4 game, int depth, int index, int score, int max){
-        if(depth == 4) return index + 1;
+        if(depth == 5) return index + 1;
 
         for (Object obj : AIUtil(game)) {
             int i = (int)obj;
