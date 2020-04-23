@@ -54,7 +54,7 @@ public class Connect4 implements IConnect4 {
      * */
     public boolean CheckForDraw(){
         for (int i = 0; i < gameBoard.GetRows(); i++){
-            for(int e = 0; e < gameBoard.GetColumns(); e++) if(!(gameBoard.GetPiece(i, e).equals("| ") || gameBoard.GetPiece(i , e).equals("| |"))) return false;
+            for(int e = 0; e < gameBoard.GetColumns(); e++) if((gameBoard.GetPiece(i, e).equals("| ") || gameBoard.GetPiece(i , e).equals("| |"))) return false;
         }
         return true;
     }
