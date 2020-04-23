@@ -20,7 +20,7 @@ class ComputerDifficultyTest {
     }
 
     @Test
-    void easy() {
+    void easy() { //checks lines of three for opponent
         testConnect4.FigureOutWhoseTurn();
 
         for(int i = 0; i < 3; i++){
@@ -32,26 +32,26 @@ class ComputerDifficultyTest {
     }
 
     @Test
-    void medium() {
+    void medium(){ //checks lines of three for itself
         testConnect4.FigureOutWhoseTurn();
 
         for(int i = 0; i < 3; i++){
-            testConnect4.gameBoard.SetPiece(i, testConnect4.player1);
+            testConnect4.gameBoard.SetPiece(5, testConnect4.player2);
         }
 
         testComputerPlayer.difficultyLevel = "m";
-        assert testComputerPlayer.MakeMove(testConnect4) == 4 : "Computer Player didn't make the most precise move";
+        assert testComputerPlayer.MakeMove(testConnect4) == 6 : "Computer Player didn't make the most precise move";
     }
 
     @Test
-    void hard() {
+    void hard(){ //checks lines of three for itself
         testConnect4.FigureOutWhoseTurn();
 
         for(int i = 0; i < 3; i++){
-            testConnect4.gameBoard.SetPiece(i, testConnect4.player1);
+            testConnect4.gameBoard.SetPiece(2, testConnect4.player2);
         }
 
         testComputerPlayer.difficultyLevel = "h";
-        assert testComputerPlayer.MakeMove(testConnect4) == 4 : "Computer Player didn't make the most precise move";
+        assert testComputerPlayer.MakeMove(testConnect4) == 3 : "Computer Player didn't make the most precise move";
     }
 }
