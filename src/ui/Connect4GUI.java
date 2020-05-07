@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class Connect4GUI extends Application implements IServerMessages {
